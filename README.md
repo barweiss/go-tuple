@@ -1,5 +1,7 @@
 # go-tuple: Generic tuples for Go 1.18.
 
+[![Go](https://github.com/barweiss/go-tuple/actions/workflows/go.yml/badge.svg)](https://github.com/barweiss/go-tuple/actions/workflows/go.yml)
+
 Go 1.18 tuple implementation.
 
 Use tuples to store 1 or more values without needing to write a custom struct.
