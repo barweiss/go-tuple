@@ -62,11 +62,11 @@ a, b := tup.Values()
 Tuples implement the `Stringer` and `GoStringer` interfaces.
 
 ```go
-fmt.Println("%s", tuple.New2("hello", "world"))
+fmt.Printf("%s\n", tuple.New2("hello", "world"))
 // Output:
 // ["hello" "world"]
 
-fmt.Println("%#v", tuple.New2("hello", "world"))
+fmt.Printf("%#v\n", tuple.New2("hello", "world"))
 // Output:
 // tuple.T2[string, string]{V1: "hello", V2: "world"}
 ```
