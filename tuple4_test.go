@@ -37,7 +37,7 @@ func TestT4_String(t *testing.T) {
 
 func TestT4_GoString(t *testing.T) {
 	tup := New4("1", "2", "3", "4")
-	require.Equal(t, `T4[string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4"}`, tup.GoString())
+	require.Equal(t, `tuple.T4[string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4"}`, tup.GoString())
 }
 
 func TestT4_ToArray(t *testing.T) {

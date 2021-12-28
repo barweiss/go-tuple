@@ -43,7 +43,7 @@ func TestT7_String(t *testing.T) {
 
 func TestT7_GoString(t *testing.T) {
 	tup := New7("1", "2", "3", "4", "5", "6", "7")
-	require.Equal(t, `T7[string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7"}`, tup.GoString())
+	require.Equal(t, `tuple.T7[string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7"}`, tup.GoString())
 }
 
 func TestT7_ToArray(t *testing.T) {

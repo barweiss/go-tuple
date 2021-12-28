@@ -45,7 +45,7 @@ func TestT8_String(t *testing.T) {
 
 func TestT8_GoString(t *testing.T) {
 	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
-	require.Equal(t, `T8[string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8"}`, tup.GoString())
+	require.Equal(t, `tuple.T8[string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8"}`, tup.GoString())
 }
 
 func TestT8_ToArray(t *testing.T) {

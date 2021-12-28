@@ -47,7 +47,7 @@ func TestT9_String(t *testing.T) {
 
 func TestT9_GoString(t *testing.T) {
 	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
-	require.Equal(t, `T9[string, string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8", V9: "9"}`, tup.GoString())
+	require.Equal(t, `tuple.T9[string, string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8", V9: "9"}`, tup.GoString())
 }
 
 func TestT9_ToArray(t *testing.T) {

@@ -39,7 +39,7 @@ func TestT5_String(t *testing.T) {
 
 func TestT5_GoString(t *testing.T) {
 	tup := New5("1", "2", "3", "4", "5")
-	require.Equal(t, `T5[string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5"}`, tup.GoString())
+	require.Equal(t, `tuple.T5[string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5"}`, tup.GoString())
 }
 
 func TestT5_ToArray(t *testing.T) {

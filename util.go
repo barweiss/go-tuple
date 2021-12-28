@@ -35,7 +35,7 @@ func tupGoString(values []any) string {
 		fields[i] = fmt.Sprintf("V%d: %#v", i+1, val)
 	}
 
-	return fmt.Sprintf("T%d[%s]{%s}",
+	return fmt.Sprintf("tuple.T%d[%s]{%s}",
 		len(values),
 		strings.Join(types, ", "),
 		strings.Join(fields, ", "),

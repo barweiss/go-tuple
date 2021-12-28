@@ -41,7 +41,7 @@ func TestT6_String(t *testing.T) {
 
 func TestT6_GoString(t *testing.T) {
 	tup := New6("1", "2", "3", "4", "5", "6")
-	require.Equal(t, `T6[string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6"}`, tup.GoString())
+	require.Equal(t, `tuple.T6[string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6"}`, tup.GoString())
 }
 
 func TestT6_ToArray(t *testing.T) {

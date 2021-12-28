@@ -35,7 +35,7 @@ func TestT3_String(t *testing.T) {
 
 func TestT3_GoString(t *testing.T) {
 	tup := New3("1", "2", "3")
-	require.Equal(t, `T3[string, string, string]{V1: "1", V2: "2", V3: "3"}`, tup.GoString())
+	require.Equal(t, `tuple.T3[string, string, string]{V1: "1", V2: "2", V3: "3"}`, tup.GoString())
 }
 
 func TestT3_ToArray(t *testing.T) {

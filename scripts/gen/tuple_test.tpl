@@ -39,7 +39,7 @@ func TestT{{.Len}}_String(t *testing.T) {
 
 func TestT{{.Len}}_GoString(t *testing.T) {
 	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
-	require.Equal(t, `T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
+	require.Equal(t, `tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
 		{{- range $i, $index := .Indexes -}}
 		{{- if gt $i 0}}, {{end -}}
 		V{{$index}}: {{$index | quote}}
