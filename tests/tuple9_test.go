@@ -1,14 +1,15 @@
-package tuple
+package tuple_test
 
 import (
 	"testing"
 
+	"github.com/barweiss/go-tuple"
 	"github.com/stretchr/testify/require"
 )
 
 func TestT9_New(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
-	require.Equal(t, T9[string, string, string, string, string, string, string, string, string]{
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	require.Equal(t, tuple.T9[string, string, string, string, string, string, string, string, string]{
 		V1: "1",
 		V2: "2",
 		V3: "3",
@@ -22,12 +23,12 @@ func TestT9_New(t *testing.T) {
 }
 
 func TestT9_Len(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, 9, tup.Len())
 }
 
 func TestT9_Values(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	v1, v2, v3, v4, v5, v6, v7, v8, v9 := tup.Values()
 	require.Equal(t, "1", v1)
 	require.Equal(t, "2", v2)
@@ -41,24 +42,24 @@ func TestT9_Values(t *testing.T) {
 }
 
 func TestT9_String(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6" "7" "8" "9"]`, tup.String())
 }
 
 func TestT9_GoString(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, `tuple.T9[string, string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8", V9: "9"}`, tup.GoString())
 }
 
 func TestT9_ToArray(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, [9]any{
 		"1", "2", "3", "4", "5", "6", "7", "8", "9",
 	}, tup.Array())
 }
 
 func TestT9_ToSlice(t *testing.T) {
-	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
+	tup := tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, []any{
 		"1", "2", "3", "4", "5", "6", "7", "8", "9",
 	}, tup.Slice())
@@ -135,8 +136,8 @@ func TestT9_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() T9[string, string, string, string, string, string, string, string, string] {
-				return FromArray9X[string, string, string, string, string, string, string, string, string](tt.array)
+			do := func() tuple.T9[string, string, string, string, string, string, string, string, string] {
+				return tuple.FromArray9X[string, string, string, string, string, string, string, string, string](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -146,7 +147,7 @@ func TestT9_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), do())
+			require.Equal(t, tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), do())
 		})
 	}
 }
@@ -222,14 +223,14 @@ func TestT9_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := FromArray9[string, string, string, string, string, string, string, string, string](tt.array)
+			tup, err := tuple.FromArray9[string, string, string, string, string, string, string, string, string](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), tup)
+			require.Equal(t, tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), tup)
 		})
 	}
 }
@@ -325,8 +326,8 @@ func TestT9_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() T9[string, string, string, string, string, string, string, string, string] {
-				return FromSlice9X[string, string, string, string, string, string, string, string, string](tt.slice)
+			do := func() tuple.T9[string, string, string, string, string, string, string, string, string] {
+				return tuple.FromSlice9X[string, string, string, string, string, string, string, string, string](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -336,7 +337,7 @@ func TestT9_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), do())
+			require.Equal(t, tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), do())
 		})
 	}
 }
@@ -432,14 +433,14 @@ func TestT9_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := FromSlice9[string, string, string, string, string, string, string, string, string](tt.slice)
+			tup, err := tuple.FromSlice9[string, string, string, string, string, string, string, string, string](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), tup)
+			require.Equal(t, tuple.New9("1", "2", "3", "4", "5", "6", "7", "8", "9"), tup)
 		})
 	}
 }

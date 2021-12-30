@@ -1,14 +1,15 @@
-package tuple
+package tuple_test
 
 import (
 	"testing"
 
+	"github.com/barweiss/go-tuple"
 	"github.com/stretchr/testify/require"
 )
 
 func TestT6_New(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
-	require.Equal(t, T6[string, string, string, string, string, string]{
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
+	require.Equal(t, tuple.T6[string, string, string, string, string, string]{
 		V1: "1",
 		V2: "2",
 		V3: "3",
@@ -19,12 +20,12 @@ func TestT6_New(t *testing.T) {
 }
 
 func TestT6_Len(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	require.Equal(t, 6, tup.Len())
 }
 
 func TestT6_Values(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	v1, v2, v3, v4, v5, v6 := tup.Values()
 	require.Equal(t, "1", v1)
 	require.Equal(t, "2", v2)
@@ -35,24 +36,24 @@ func TestT6_Values(t *testing.T) {
 }
 
 func TestT6_String(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6"]`, tup.String())
 }
 
 func TestT6_GoString(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	require.Equal(t, `tuple.T6[string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6"}`, tup.GoString())
 }
 
 func TestT6_ToArray(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	require.Equal(t, [6]any{
 		"1", "2", "3", "4", "5", "6",
 	}, tup.Array())
 }
 
 func TestT6_ToSlice(t *testing.T) {
-	tup := New6("1", "2", "3", "4", "5", "6")
+	tup := tuple.New6("1", "2", "3", "4", "5", "6")
 	require.Equal(t, []any{
 		"1", "2", "3", "4", "5", "6",
 	}, tup.Slice())
@@ -111,8 +112,8 @@ func TestT6_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() T6[string, string, string, string, string, string] {
-				return FromArray6X[string, string, string, string, string, string](tt.array)
+			do := func() tuple.T6[string, string, string, string, string, string] {
+				return tuple.FromArray6X[string, string, string, string, string, string](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -122,7 +123,7 @@ func TestT6_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New6("1", "2", "3", "4", "5", "6"), do())
+			require.Equal(t, tuple.New6("1", "2", "3", "4", "5", "6"), do())
 		})
 	}
 }
@@ -180,14 +181,14 @@ func TestT6_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := FromArray6[string, string, string, string, string, string](tt.array)
+			tup, err := tuple.FromArray6[string, string, string, string, string, string](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New6("1", "2", "3", "4", "5", "6"), tup)
+			require.Equal(t, tuple.New6("1", "2", "3", "4", "5", "6"), tup)
 		})
 	}
 }
@@ -265,8 +266,8 @@ func TestT6_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() T6[string, string, string, string, string, string] {
-				return FromSlice6X[string, string, string, string, string, string](tt.slice)
+			do := func() tuple.T6[string, string, string, string, string, string] {
+				return tuple.FromSlice6X[string, string, string, string, string, string](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -276,7 +277,7 @@ func TestT6_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New6("1", "2", "3", "4", "5", "6"), do())
+			require.Equal(t, tuple.New6("1", "2", "3", "4", "5", "6"), do())
 		})
 	}
 }
@@ -354,14 +355,14 @@ func TestT6_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := FromSlice6[string, string, string, string, string, string](tt.slice)
+			tup, err := tuple.FromSlice6[string, string, string, string, string, string](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New6("1", "2", "3", "4", "5", "6"), tup)
+			require.Equal(t, tuple.New6("1", "2", "3", "4", "5", "6"), tup)
 		})
 	}
 }
