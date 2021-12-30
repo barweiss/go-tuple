@@ -5,7 +5,7 @@ import (
 )
 
 // T2 is a tuple type holding 2 generic values.
-type T2[Ty1 any, Ty2 any] struct {
+type T2[Ty1, Ty2 any] struct {
 	V1 Ty1
 	V2 Ty2
 }
@@ -45,7 +45,7 @@ func (t T2[Ty1, Ty2]) GoString() string {
 }
 
 // New2 creates a new tuple holding 2 generic values.
-func New2[Ty1 any, Ty2 any](v1 Ty1, v2 Ty2) T2[Ty1, Ty2] {
+func New2[Ty1, Ty2 any](v1 Ty1, v2 Ty2) T2[Ty1, Ty2] {
 	return T2[Ty1, Ty2]{
 		V1: v1,
 		V2: v2,
@@ -54,7 +54,7 @@ func New2[Ty1 any, Ty2 any](v1 Ty1, v2 Ty2) T2[Ty1, Ty2] {
 
 // FromArray2 returns a tuple from an array of length 2.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray2[Ty1 any, Ty2 any](arr [2]any) (T2[Ty1, Ty2], error) {
+func FromArray2[Ty1, Ty2 any](arr [2]any) (T2[Ty1, Ty2], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T2[Ty1, Ty2]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -69,13 +69,13 @@ func FromArray2[Ty1 any, Ty2 any](arr [2]any) (T2[Ty1, Ty2], error) {
 
 // FromArray2X returns a tuple from an array of length 2.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray2X[Ty1 any, Ty2 any](arr [2]any) T2[Ty1, Ty2] {
+func FromArray2X[Ty1, Ty2 any](arr [2]any) T2[Ty1, Ty2] {
 	return FromSlice2X[Ty1, Ty2](arr[:])
 }
 
 // FromSlice2 returns a tuple from a slice of length 2.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice2[Ty1 any, Ty2 any](values []any) (T2[Ty1, Ty2], error) {
+func FromSlice2[Ty1, Ty2 any](values []any) (T2[Ty1, Ty2], error) {
 	if len(values) != 2 {
 		return T2[Ty1, Ty2]{}, fmt.Errorf("slice length %d must match number of tuple values 2", len(values))
 	}
@@ -94,7 +94,7 @@ func FromSlice2[Ty1 any, Ty2 any](values []any) (T2[Ty1, Ty2], error) {
 
 // FromSlice2X returns a tuple from a slice of length 2.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice2X[Ty1 any, Ty2 any](values []any) T2[Ty1, Ty2] {
+func FromSlice2X[Ty1, Ty2 any](values []any) T2[Ty1, Ty2] {
 	if len(values) != 2 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 2", len(values)))
 	}

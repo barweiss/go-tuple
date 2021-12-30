@@ -5,7 +5,7 @@ import (
 )
 
 // T8 is a tuple type holding 8 generic values.
-type T8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any] struct {
+type T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any] struct {
 	V1 Ty1
 	V2 Ty2
 	V3 Ty3
@@ -57,7 +57,7 @@ func (t T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) GoString() string {
 }
 
 // New8 creates a new tuple holding 8 generic values.
-func New8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6, v7 Ty7, v8 Ty8) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
+func New8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6, v7 Ty7, v8 Ty8) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
 	return T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]{
 		V1: v1,
 		V2: v2,
@@ -72,7 +72,7 @@ func New8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any
 
 // FromArray8 returns a tuple from an array of length 8.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any](arr [8]any) (T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8], error) {
+func FromArray8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any](arr [8]any) (T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -111,13 +111,13 @@ func FromArray8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, T
 
 // FromArray8X returns a tuple from an array of length 8.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray8X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any](arr [8]any) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
+func FromArray8X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any](arr [8]any) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
 	return FromSlice8X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8](arr[:])
 }
 
 // FromSlice8 returns a tuple from a slice of length 8.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any](values []any) (T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8], error) {
+func FromSlice8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any](values []any) (T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8], error) {
 	if len(values) != 8 {
 		return T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]{}, fmt.Errorf("slice length %d must match number of tuple values 8", len(values))
 	}
@@ -160,7 +160,7 @@ func FromSlice8[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, T
 
 // FromSlice8X returns a tuple from a slice of length 8.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice8X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any, Ty8 any](values []any) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
+func FromSlice8X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 any](values []any) T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8] {
 	if len(values) != 8 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 8", len(values)))
 	}

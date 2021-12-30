@@ -117,8 +117,11 @@ func generateFile(context templateContext, outputFilePath string, tpl *template.
 func genTypesDecl(indexes []int) string {
 	sep := make([]string, len(indexes))
 	for index, typeIndex := range indexes {
-		sep[index] = fmt.Sprintf("Ty%d any", typeIndex)
+		sep[index] = fmt.Sprintf("Ty%d", typeIndex)
 	}
+
+	// Add constraint descriptor to last element.
+	sep[len(indexes)-1] += " any"
 
 	return strings.Join(sep, ", ")
 }
