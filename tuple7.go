@@ -5,7 +5,7 @@ import (
 )
 
 // T7 is a tuple type holding 7 generic values.
-type T7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any] struct {
+type T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any] struct {
 	V1 Ty1
 	V2 Ty2
 	V3 Ty3
@@ -55,7 +55,7 @@ func (t T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) GoString() string {
 }
 
 // New7 creates a new tuple holding 7 generic values.
-func New7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6, v7 Ty7) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
+func New7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6, v7 Ty7) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
 	return T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]{
 		V1: v1,
 		V2: v2,
@@ -69,7 +69,7 @@ func New7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](v1 Ty1,
 
 // FromArray7 returns a tuple from an array of length 7.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](arr [7]any) (T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7], error) {
+func FromArray7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](arr [7]any) (T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -104,13 +104,13 @@ func FromArray7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](a
 
 // FromArray7X returns a tuple from an array of length 7.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray7X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](arr [7]any) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
+func FromArray7X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](arr [7]any) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
 	return FromSlice7X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7](arr[:])
 }
 
 // FromSlice7 returns a tuple from a slice of length 7.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](values []any) (T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7], error) {
+func FromSlice7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](values []any) (T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7], error) {
 	if len(values) != 7 {
 		return T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]{}, fmt.Errorf("slice length %d must match number of tuple values 7", len(values))
 	}
@@ -149,7 +149,7 @@ func FromSlice7[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](v
 
 // FromSlice7X returns a tuple from a slice of length 7.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice7X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any, Ty7 any](values []any) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
+func FromSlice7X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](values []any) T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7] {
 	if len(values) != 7 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 7", len(values)))
 	}

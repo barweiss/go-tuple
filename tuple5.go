@@ -5,7 +5,7 @@ import (
 )
 
 // T5 is a tuple type holding 5 generic values.
-type T5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any] struct {
+type T5[Ty1, Ty2, Ty3, Ty4, Ty5 any] struct {
 	V1 Ty1
 	V2 Ty2
 	V3 Ty3
@@ -51,7 +51,7 @@ func (t T5[Ty1, Ty2, Ty3, Ty4, Ty5]) GoString() string {
 }
 
 // New5 creates a new tuple holding 5 generic values.
-func New5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
+func New5[Ty1, Ty2, Ty3, Ty4, Ty5 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
 	return T5[Ty1, Ty2, Ty3, Ty4, Ty5]{
 		V1: v1,
 		V2: v2,
@@ -63,7 +63,7 @@ func New5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](v1 Ty1, v2 Ty2, v3 Ty3, v
 
 // FromArray5 returns a tuple from an array of length 5.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](arr [5]any) (T5[Ty1, Ty2, Ty3, Ty4, Ty5], error) {
+func FromArray5[Ty1, Ty2, Ty3, Ty4, Ty5 any](arr [5]any) (T5[Ty1, Ty2, Ty3, Ty4, Ty5], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T5[Ty1, Ty2, Ty3, Ty4, Ty5]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -90,13 +90,13 @@ func FromArray5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](arr [5]any) (T5[Ty1
 
 // FromArray5X returns a tuple from an array of length 5.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray5X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](arr [5]any) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
+func FromArray5X[Ty1, Ty2, Ty3, Ty4, Ty5 any](arr [5]any) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
 	return FromSlice5X[Ty1, Ty2, Ty3, Ty4, Ty5](arr[:])
 }
 
 // FromSlice5 returns a tuple from a slice of length 5.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](values []any) (T5[Ty1, Ty2, Ty3, Ty4, Ty5], error) {
+func FromSlice5[Ty1, Ty2, Ty3, Ty4, Ty5 any](values []any) (T5[Ty1, Ty2, Ty3, Ty4, Ty5], error) {
 	if len(values) != 5 {
 		return T5[Ty1, Ty2, Ty3, Ty4, Ty5]{}, fmt.Errorf("slice length %d must match number of tuple values 5", len(values))
 	}
@@ -127,7 +127,7 @@ func FromSlice5[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](values []any) (T5[T
 
 // FromSlice5X returns a tuple from a slice of length 5.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice5X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any](values []any) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
+func FromSlice5X[Ty1, Ty2, Ty3, Ty4, Ty5 any](values []any) T5[Ty1, Ty2, Ty3, Ty4, Ty5] {
 	if len(values) != 5 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 5", len(values)))
 	}

@@ -5,7 +5,7 @@ import (
 )
 
 // T3 is a tuple type holding 3 generic values.
-type T3[Ty1 any, Ty2 any, Ty3 any] struct {
+type T3[Ty1, Ty2, Ty3 any] struct {
 	V1 Ty1
 	V2 Ty2
 	V3 Ty3
@@ -47,7 +47,7 @@ func (t T3[Ty1, Ty2, Ty3]) GoString() string {
 }
 
 // New3 creates a new tuple holding 3 generic values.
-func New3[Ty1 any, Ty2 any, Ty3 any](v1 Ty1, v2 Ty2, v3 Ty3) T3[Ty1, Ty2, Ty3] {
+func New3[Ty1, Ty2, Ty3 any](v1 Ty1, v2 Ty2, v3 Ty3) T3[Ty1, Ty2, Ty3] {
 	return T3[Ty1, Ty2, Ty3]{
 		V1: v1,
 		V2: v2,
@@ -57,7 +57,7 @@ func New3[Ty1 any, Ty2 any, Ty3 any](v1 Ty1, v2 Ty2, v3 Ty3) T3[Ty1, Ty2, Ty3] {
 
 // FromArray3 returns a tuple from an array of length 3.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray3[Ty1 any, Ty2 any, Ty3 any](arr [3]any) (T3[Ty1, Ty2, Ty3], error) {
+func FromArray3[Ty1, Ty2, Ty3 any](arr [3]any) (T3[Ty1, Ty2, Ty3], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T3[Ty1, Ty2, Ty3]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -76,13 +76,13 @@ func FromArray3[Ty1 any, Ty2 any, Ty3 any](arr [3]any) (T3[Ty1, Ty2, Ty3], error
 
 // FromArray3X returns a tuple from an array of length 3.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray3X[Ty1 any, Ty2 any, Ty3 any](arr [3]any) T3[Ty1, Ty2, Ty3] {
+func FromArray3X[Ty1, Ty2, Ty3 any](arr [3]any) T3[Ty1, Ty2, Ty3] {
 	return FromSlice3X[Ty1, Ty2, Ty3](arr[:])
 }
 
 // FromSlice3 returns a tuple from a slice of length 3.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice3[Ty1 any, Ty2 any, Ty3 any](values []any) (T3[Ty1, Ty2, Ty3], error) {
+func FromSlice3[Ty1, Ty2, Ty3 any](values []any) (T3[Ty1, Ty2, Ty3], error) {
 	if len(values) != 3 {
 		return T3[Ty1, Ty2, Ty3]{}, fmt.Errorf("slice length %d must match number of tuple values 3", len(values))
 	}
@@ -105,7 +105,7 @@ func FromSlice3[Ty1 any, Ty2 any, Ty3 any](values []any) (T3[Ty1, Ty2, Ty3], err
 
 // FromSlice3X returns a tuple from a slice of length 3.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice3X[Ty1 any, Ty2 any, Ty3 any](values []any) T3[Ty1, Ty2, Ty3] {
+func FromSlice3X[Ty1, Ty2, Ty3 any](values []any) T3[Ty1, Ty2, Ty3] {
 	if len(values) != 3 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 3", len(values)))
 	}

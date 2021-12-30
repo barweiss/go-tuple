@@ -5,7 +5,7 @@ import (
 )
 
 // T6 is a tuple type holding 6 generic values.
-type T6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any] struct {
+type T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any] struct {
 	V1 Ty1
 	V2 Ty2
 	V3 Ty3
@@ -53,7 +53,7 @@ func (t T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) GoString() string {
 }
 
 // New6 creates a new tuple holding 6 generic values.
-func New6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
+func New6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](v1 Ty1, v2 Ty2, v3 Ty3, v4 Ty4, v5 Ty5, v6 Ty6) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
 	return T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]{
 		V1: v1,
 		V2: v2,
@@ -66,7 +66,7 @@ func New6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](v1 Ty1, v2 Ty2, 
 
 // FromArray6 returns a tuple from an array of length 6.
 // If any of the values can not be converted to the generic type, an error is returned.
-func FromArray6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](arr [6]any) (T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6], error) {
+func FromArray6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](arr [6]any) (T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6], error) {
 	v1, ok := arr[0].(Ty1)
 	if !ok {
 		return T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]{}, fmt.Errorf("value at array index 0 expected to have type %s but has type %T", typeName[Ty1](), arr[0])
@@ -97,13 +97,13 @@ func FromArray6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](arr [6]any
 
 // FromArray6X returns a tuple from an array of length 6.
 // If any of the values can not be converted to the generic type, the function panics.
-func FromArray6X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](arr [6]any) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
+func FromArray6X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](arr [6]any) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
 	return FromSlice6X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6](arr[:])
 }
 
 // FromSlice6 returns a tuple from a slice of length 6.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, an error is returned.
-func FromSlice6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](values []any) (T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6], error) {
+func FromSlice6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](values []any) (T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6], error) {
 	if len(values) != 6 {
 		return T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]{}, fmt.Errorf("slice length %d must match number of tuple values 6", len(values))
 	}
@@ -138,7 +138,7 @@ func FromSlice6[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](values []a
 
 // FromSlice6X returns a tuple from a slice of length 6.
 // If the length of the slice doesn't match, or any of the values can not be converted to the generic type, the function panics.
-func FromSlice6X[Ty1 any, Ty2 any, Ty3 any, Ty4 any, Ty5 any, Ty6 any](values []any) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
+func FromSlice6X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](values []any) T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6] {
 	if len(values) != 6 {
 		panic(fmt.Errorf("slice length %d must match number of tuple values 6", len(values)))
 	}
