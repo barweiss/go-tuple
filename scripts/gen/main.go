@@ -75,7 +75,7 @@ func main() {
 				tpl:      codeTpl,
 			},
 			{
-				fullPath: path.Join(outputDir, fmt.Sprintf("tuple%d_test.go", tupleLength)),
+				fullPath: path.Join(outputDir, "tests", fmt.Sprintf("tuple%d_test.go", tupleLength)),
 				tpl:      testTpl,
 			},
 		}
