@@ -120,7 +120,7 @@ func genTypesDecl(indexes []int) string {
 		sep[index] = fmt.Sprintf("Ty%d", typeIndex)
 	}
 
-	// Add constraint descriptor to last element.
+	// Add constraint to last element.
 	sep[len(indexes)-1] += " any"
 
 	return strings.Join(sep, ", ")
