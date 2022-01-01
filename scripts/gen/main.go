@@ -16,7 +16,6 @@ type templateContext struct {
 	Len                 int
 	TypeName            string
 	TypeDecl            string
-	GenericTypesDecl    string
 	GenericTypesForward string
 }
 
@@ -27,6 +26,23 @@ var funcMap = template.FuncMap{
 	"quote": func(value interface{}) string {
 		return fmt.Sprintf("%q", fmt.Sprint(value))
 	},
+	"inc": func(value int) int {
+		return value + 1
+	},
+	"typeRef": func(indexes []int, suffix ...string) string {
+		if len(suffix) > 1 {
+			panic(fmt.Errorf("typeRef accepts at most 1 suffix argument"))
+		}
+
+		var typeNameSuffix string
+		if len(suffix) == 1 {
+			typeNameSuffix = suffix[0]
+		}
+
+		return fmt.Sprintf("T%d%s[%s]", len(indexes), typeNameSuffix, genTypesForward(indexes))
+	},
+	"genericTypesDecl":                  genTypesDecl,
+	"genericTypesDeclGenericConstraint": genTypesDeclGenericConstraint,
 }
 
 //go:embed tuple.tpl
@@ -55,15 +71,10 @@ func main() {
 			indexes[index] = index + 1
 		}
 
-		decl := genTypesDecl(indexes)
-		forward := genTypesForward(indexes)
 		context := templateContext{
 			Indexes:             indexes,
 			Len:                 tupleLength,
-			TypeName:            fmt.Sprintf("T%d[%s]", tupleLength, forward),
-			TypeDecl:            fmt.Sprintf("T%d[%s]", tupleLength, decl),
-			GenericTypesDecl:    decl,
-			GenericTypesForward: forward,
+			GenericTypesForward: genTypesForward(indexes),
 		}
 
 		filesToGenerate := []struct {
@@ -112,18 +123,25 @@ func generateFile(context templateContext, outputFilePath string, tpl *template.
 	}
 }
 
+func genTypesDeclGenericConstraint(indexes []int, constraint string) string {
+	sep := make([]string, len(indexes))
+	for index, typeIndex := range indexes {
+		typ := fmt.Sprintf("Ty%d", typeIndex)
+		sep[index] = fmt.Sprintf("%s %s[%s]", typ, constraint, typ)
+	}
+
+	return strings.Join(sep, ", ")
+}
+
 // genTypesDecl generates a "TypeParamDecl" (https://tip.golang.org/ref/spec#Type_parameter_lists) expression,
 // used to declare generic types for a type or a function, according to the given element indexes.
-func genTypesDecl(indexes []int) string {
+func genTypesDecl(indexes []int, constraint string) string {
 	sep := make([]string, len(indexes))
 	for index, typeIndex := range indexes {
 		sep[index] = fmt.Sprintf("Ty%d", typeIndex)
 	}
 
-	// Add constraint to last element.
-	sep[len(indexes)-1] += " any"
-
-	return strings.Join(sep, ", ")
+	return strings.Join(sep, ", ") + " " + constraint
 }
 
 // genTypesForward generates a "TypeParamList" (https://tip.golang.org/ref/spec#Type_parameter_lists) expression,

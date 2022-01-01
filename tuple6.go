@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"constraints"
 	"fmt"
 )
 
@@ -151,4 +152,125 @@ func FromSlice6X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 any](values []any) T6[Ty1, Ty2, Ty
 	v6 := values[5].(Ty6)
 
 	return New6(v1, v2, v3, v4, v5, v6)
+}
+
+// Equal6 returns whether the host tuple is equal to the other tuple.
+// All tuple elements of the host and guest parameters must match the "comparable" built-in constraint.
+// To test equality of tuples that hold custom Equalable values, use the Equal6E function.
+// To test equality of tuples that hold custom Comparable values, use the Equal6C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 comparable](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return host.V1 == guest.V1 && host.V2 == guest.V2 && host.V3 == guest.V3 && host.V4 == guest.V4 && host.V5 == guest.V5 && host.V6 == guest.V6
+}
+
+// Equal6E returns whether the host tuple is semantically equal to the guest tuple.
+// All tuple elements of the host and guest parameters must match the Equalable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal6 function.
+// To test equality of tuples that hold custom Comparable values, use the Equal6C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal6E[Ty1 Equalable[Ty1], Ty2 Equalable[Ty2], Ty3 Equalable[Ty3], Ty4 Equalable[Ty4], Ty5 Equalable[Ty5], Ty6 Equalable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return host.V1.Equal(guest.V1) && host.V2.Equal(guest.V2) && host.V3.Equal(guest.V3) && host.V4.Equal(guest.V4) && host.V5.Equal(guest.V5) && host.V6.Equal(guest.V6)
+}
+
+// Equal6C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal6 function.
+// To test equality of tuples that hold custom Equalable values, use the Equal6E function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return host.V1.CompareTo(guest.V1).EQ() && host.V2.CompareTo(guest.V2).EQ() && host.V3.CompareTo(guest.V3).EQ() && host.V4.CompareTo(guest.V4).EQ() && host.V5.CompareTo(guest.V5).EQ() && host.V6.CompareTo(guest.V6).EQ()
+}
+
+// Compare6 returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the Compare6C function.
+func Compare6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return compareOrdered(host.V1, guest.V1) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V2, guest.V2) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V3, guest.V3) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V4, guest.V4) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V5, guest.V5) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V6, guest.V6) },
+	)
+}
+
+// Compare6C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the Compare6 function.
+func Compare6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return host.V1.CompareTo(guest.V1) },
+
+		func() OrderedComparisonResult { return host.V2.CompareTo(guest.V2) },
+
+		func() OrderedComparisonResult { return host.V3.CompareTo(guest.V3) },
+
+		func() OrderedComparisonResult { return host.V4.CompareTo(guest.V4) },
+
+		func() OrderedComparisonResult { return host.V5.CompareTo(guest.V5) },
+
+		func() OrderedComparisonResult { return host.V6.CompareTo(guest.V6) },
+	)
+}
+
+// LessThan6 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessThan6C function.
+func LessThan6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6(host, guest).LT()
+}
+
+// LessThan6C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessThan6 function.
+func LessThan6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6C(host, guest).LT()
+}
+
+// LessOrEqual6 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessOrEqual6C function.
+func LessOrEqual6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6(host, guest).LE()
+}
+
+// LessOrEqual6C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessOrEqual6 function.
+func LessOrEqual6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6C(host, guest).LE()
+}
+
+// GreaterThan6 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterThan6C function.
+func GreaterThan6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6(host, guest).GT()
+}
+
+// GreaterThan6C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterThan6 function.
+func GreaterThan6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6C(host, guest).GT()
+}
+
+// GreaterOrEqual6 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterOrEqual6C function.
+func GreaterOrEqual6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6(host, guest).GE()
+}
+
+// GreaterOrEqual6C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual6 function.
+func GreaterOrEqual6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
+	return Compare6C(host, guest).GE()
 }

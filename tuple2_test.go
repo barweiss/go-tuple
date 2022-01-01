@@ -26,6 +26,194 @@ func TestT2_Values(t *testing.T) {
 	require.Equal(t, "2", v2)
 }
 
+func TestT2_Compare(t *testing.T) {
+	lesser := New2(1, 2)
+	greater := New2(2, 3)
+
+	tests := []struct {
+		name        string
+		host, guest T2[int, int]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare2(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal2(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan2(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual2(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan2(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual2(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT2_Compare_Approx(t *testing.T) {
+	lesser := New2(approximationHelper("1"), approximationHelper("2"))
+	greater := New2(approximationHelper("2"), approximationHelper("3"))
+
+	tests := []struct {
+		name        string
+		host, guest T2[approximationHelper, approximationHelper]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare2(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal2(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan2(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual2(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan2(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual2(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT2_CompareC(t *testing.T) {
+	lesser := New2(stringComparable("1"), stringComparable("2"))
+	greater := New2(stringComparable("2"), stringComparable("3"))
+
+	tests := []struct {
+		name        string
+		host, guest T2[stringComparable, stringComparable]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare2C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal2C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan2C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual2C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan2C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual2C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT2_EqualE(t *testing.T) {
+	a := New2(intEqualable(1), intEqualable(2))
+	b := New2(intEqualable(2), intEqualable(3))
+
+	require.False(t, Equal2E(a, b))
+	require.True(t, Equal2E(a, a))
+}
+
 func TestT2_String(t *testing.T) {
 	tup := New2("1", "2")
 	require.Equal(t, `["1" "2"]`, tup.String())

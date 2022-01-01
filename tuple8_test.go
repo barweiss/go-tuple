@@ -38,6 +38,194 @@ func TestT8_Values(t *testing.T) {
 	require.Equal(t, "8", v8)
 }
 
+func TestT8_Compare(t *testing.T) {
+	lesser := New8(1, 2, 3, 4, 5, 6, 7, 8)
+	greater := New8(2, 3, 4, 5, 6, 7, 8, 9)
+
+	tests := []struct {
+		name        string
+		host, guest T8[int, int, int, int, int, int, int, int]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare8(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal8(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan8(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual8(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan8(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual8(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT8_Compare_Approx(t *testing.T) {
+	lesser := New8(approximationHelper("1"), approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"), approximationHelper("8"))
+	greater := New8(approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"), approximationHelper("8"), approximationHelper("9"))
+
+	tests := []struct {
+		name        string
+		host, guest T8[approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare8(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal8(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan8(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual8(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan8(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual8(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT8_CompareC(t *testing.T) {
+	lesser := New8(stringComparable("1"), stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"), stringComparable("8"))
+	greater := New8(stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"), stringComparable("8"), stringComparable("9"))
+
+	tests := []struct {
+		name        string
+		host, guest T8[stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare8C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal8C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan8C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual8C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan8C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual8C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT8_EqualE(t *testing.T) {
+	a := New8(intEqualable(1), intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7), intEqualable(8))
+	b := New8(intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7), intEqualable(8), intEqualable(9))
+
+	require.False(t, Equal8E(a, b))
+	require.True(t, Equal8E(a, a))
+}
+
 func TestT8_String(t *testing.T) {
 	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6" "7" "8"]`, tup.String())

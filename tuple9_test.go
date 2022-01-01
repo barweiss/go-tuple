@@ -40,6 +40,194 @@ func TestT9_Values(t *testing.T) {
 	require.Equal(t, "9", v9)
 }
 
+func TestT9_Compare(t *testing.T) {
+	lesser := New9(1, 2, 3, 4, 5, 6, 7, 8, 9)
+	greater := New9(2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+	tests := []struct {
+		name        string
+		host, guest T9[int, int, int, int, int, int, int, int, int]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare9(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal9(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan9(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual9(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan9(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual9(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT9_Compare_Approx(t *testing.T) {
+	lesser := New9(approximationHelper("1"), approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"), approximationHelper("8"), approximationHelper("9"))
+	greater := New9(approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"), approximationHelper("8"), approximationHelper("9"), approximationHelper("10"))
+
+	tests := []struct {
+		name        string
+		host, guest T9[approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare9(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal9(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan9(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual9(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan9(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual9(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT9_CompareC(t *testing.T) {
+	lesser := New9(stringComparable("1"), stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"), stringComparable("8"), stringComparable("9"))
+	greater := New9(stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"), stringComparable("8"), stringComparable("9"), stringComparable("10"))
+
+	tests := []struct {
+		name        string
+		host, guest T9[stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare9C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal9C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan9C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual9C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan9C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual9C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT9_EqualE(t *testing.T) {
+	a := New9(intEqualable(1), intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7), intEqualable(8), intEqualable(9))
+	b := New9(intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7), intEqualable(8), intEqualable(9), intEqualable(10))
+
+	require.False(t, Equal9E(a, b))
+	require.True(t, Equal9E(a, a))
+}
+
 func TestT9_String(t *testing.T) {
 	tup := New9("1", "2", "3", "4", "5", "6", "7", "8", "9")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6" "7" "8" "9"]`, tup.String())

@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"constraints"
 	"fmt"
 )
 
@@ -115,4 +116,113 @@ func FromSlice3X[Ty1, Ty2, Ty3 any](values []any) T3[Ty1, Ty2, Ty3] {
 	v3 := values[2].(Ty3)
 
 	return New3(v1, v2, v3)
+}
+
+// Equal3 returns whether the host tuple is equal to the other tuple.
+// All tuple elements of the host and guest parameters must match the "comparable" built-in constraint.
+// To test equality of tuples that hold custom Equalable values, use the Equal3E function.
+// To test equality of tuples that hold custom Comparable values, use the Equal3C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal3[Ty1, Ty2, Ty3 comparable](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return host.V1 == guest.V1 && host.V2 == guest.V2 && host.V3 == guest.V3
+}
+
+// Equal3E returns whether the host tuple is semantically equal to the guest tuple.
+// All tuple elements of the host and guest parameters must match the Equalable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal3 function.
+// To test equality of tuples that hold custom Comparable values, use the Equal3C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal3E[Ty1 Equalable[Ty1], Ty2 Equalable[Ty2], Ty3 Equalable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return host.V1.Equal(guest.V1) && host.V2.Equal(guest.V2) && host.V3.Equal(guest.V3)
+}
+
+// Equal3C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal3 function.
+// To test equality of tuples that hold custom Equalable values, use the Equal3E function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return host.V1.CompareTo(guest.V1).EQ() && host.V2.CompareTo(guest.V2).EQ() && host.V3.CompareTo(guest.V3).EQ()
+}
+
+// Compare3 returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the Compare3C function.
+func Compare3[Ty1, Ty2, Ty3 constraints.Ordered](host, guest T3[Ty1, Ty2, Ty3]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return compareOrdered(host.V1, guest.V1) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V2, guest.V2) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V3, guest.V3) },
+	)
+}
+
+// Compare3C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the Compare3 function.
+func Compare3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return host.V1.CompareTo(guest.V1) },
+
+		func() OrderedComparisonResult { return host.V2.CompareTo(guest.V2) },
+
+		func() OrderedComparisonResult { return host.V3.CompareTo(guest.V3) },
+	)
+}
+
+// LessThan3 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessThan3C function.
+func LessThan3[Ty1, Ty2, Ty3 constraints.Ordered](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3(host, guest).LT()
+}
+
+// LessThan3C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessThan3 function.
+func LessThan3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3C(host, guest).LT()
+}
+
+// LessOrEqual3 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessOrEqual3C function.
+func LessOrEqual3[Ty1, Ty2, Ty3 constraints.Ordered](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3(host, guest).LE()
+}
+
+// LessOrEqual3C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessOrEqual3 function.
+func LessOrEqual3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3C(host, guest).LE()
+}
+
+// GreaterThan3 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterThan3C function.
+func GreaterThan3[Ty1, Ty2, Ty3 constraints.Ordered](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3(host, guest).GT()
+}
+
+// GreaterThan3C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterThan3 function.
+func GreaterThan3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3C(host, guest).GT()
+}
+
+// GreaterOrEqual3 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterOrEqual3C function.
+func GreaterOrEqual3[Ty1, Ty2, Ty3 constraints.Ordered](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3(host, guest).GE()
+}
+
+// GreaterOrEqual3C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual3 function.
+func GreaterOrEqual3C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3]](host, guest T3[Ty1, Ty2, Ty3]) bool {
+	return Compare3C(host, guest).GE()
 }

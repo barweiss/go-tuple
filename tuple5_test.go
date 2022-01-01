@@ -32,6 +32,194 @@ func TestT5_Values(t *testing.T) {
 	require.Equal(t, "5", v5)
 }
 
+func TestT5_Compare(t *testing.T) {
+	lesser := New5(1, 2, 3, 4, 5)
+	greater := New5(2, 3, 4, 5, 6)
+
+	tests := []struct {
+		name        string
+		host, guest T5[int, int, int, int, int]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare5(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal5(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan5(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual5(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan5(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual5(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT5_Compare_Approx(t *testing.T) {
+	lesser := New5(approximationHelper("1"), approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"))
+	greater := New5(approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"))
+
+	tests := []struct {
+		name        string
+		host, guest T5[approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare5(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal5(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan5(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual5(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan5(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual5(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT5_CompareC(t *testing.T) {
+	lesser := New5(stringComparable("1"), stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"))
+	greater := New5(stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"))
+
+	tests := []struct {
+		name        string
+		host, guest T5[stringComparable, stringComparable, stringComparable, stringComparable, stringComparable]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare5C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal5C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan5C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual5C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan5C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual5C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT5_EqualE(t *testing.T) {
+	a := New5(intEqualable(1), intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5))
+	b := New5(intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6))
+
+	require.False(t, Equal5E(a, b))
+	require.True(t, Equal5E(a, a))
+}
+
 func TestT5_String(t *testing.T) {
 	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, `["1" "2" "3" "4" "5"]`, tup.String())
