@@ -1,15 +1,14 @@
-package tuple_test
+package tuple
 
 import (
 	"testing"
 
-	"github.com/barweiss/go-tuple"
 	"github.com/stretchr/testify/require"
 )
 
 func TestT8_New(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
-	require.Equal(t, tuple.T8[string, string, string, string, string, string, string, string]{
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
+	require.Equal(t, T8[string, string, string, string, string, string, string, string]{
 		V1: "1",
 		V2: "2",
 		V3: "3",
@@ -22,12 +21,12 @@ func TestT8_New(t *testing.T) {
 }
 
 func TestT8_Len(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, 8, tup.Len())
 }
 
 func TestT8_Values(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	v1, v2, v3, v4, v5, v6, v7, v8 := tup.Values()
 	require.Equal(t, "1", v1)
 	require.Equal(t, "2", v2)
@@ -40,24 +39,24 @@ func TestT8_Values(t *testing.T) {
 }
 
 func TestT8_String(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6" "7" "8"]`, tup.String())
 }
 
 func TestT8_GoString(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, `tuple.T8[string, string, string, string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5", V6: "6", V7: "7", V8: "8"}`, tup.GoString())
 }
 
 func TestT8_ToArray(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, [8]any{
 		"1", "2", "3", "4", "5", "6", "7", "8",
 	}, tup.Array())
 }
 
 func TestT8_ToSlice(t *testing.T) {
-	tup := tuple.New8("1", "2", "3", "4", "5", "6", "7", "8")
+	tup := New8("1", "2", "3", "4", "5", "6", "7", "8")
 	require.Equal(t, []any{
 		"1", "2", "3", "4", "5", "6", "7", "8",
 	}, tup.Slice())
@@ -128,8 +127,8 @@ func TestT8_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T8[string, string, string, string, string, string, string, string] {
-				return tuple.FromArray8X[string, string, string, string, string, string, string, string](tt.array)
+			do := func() T8[string, string, string, string, string, string, string, string] {
+				return FromArray8X[string, string, string, string, string, string, string, string](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -139,7 +138,7 @@ func TestT8_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New8("1", "2", "3", "4", "5", "6", "7", "8"), do())
+			require.Equal(t, New8("1", "2", "3", "4", "5", "6", "7", "8"), do())
 		})
 	}
 }
@@ -209,14 +208,14 @@ func TestT8_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromArray8[string, string, string, string, string, string, string, string](tt.array)
+			tup, err := FromArray8[string, string, string, string, string, string, string, string](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New8("1", "2", "3", "4", "5", "6", "7", "8"), tup)
+			require.Equal(t, New8("1", "2", "3", "4", "5", "6", "7", "8"), tup)
 		})
 	}
 }
@@ -306,8 +305,8 @@ func TestT8_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T8[string, string, string, string, string, string, string, string] {
-				return tuple.FromSlice8X[string, string, string, string, string, string, string, string](tt.slice)
+			do := func() T8[string, string, string, string, string, string, string, string] {
+				return FromSlice8X[string, string, string, string, string, string, string, string](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -317,7 +316,7 @@ func TestT8_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New8("1", "2", "3", "4", "5", "6", "7", "8"), do())
+			require.Equal(t, New8("1", "2", "3", "4", "5", "6", "7", "8"), do())
 		})
 	}
 }
@@ -407,14 +406,14 @@ func TestT8_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromSlice8[string, string, string, string, string, string, string, string](tt.slice)
+			tup, err := FromSlice8[string, string, string, string, string, string, string, string](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New8("1", "2", "3", "4", "5", "6", "7", "8"), tup)
+			require.Equal(t, New8("1", "2", "3", "4", "5", "6", "7", "8"), tup)
 		})
 	}
 }

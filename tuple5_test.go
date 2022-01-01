@@ -1,15 +1,14 @@
-package tuple_test
+package tuple
 
 import (
 	"testing"
 
-	"github.com/barweiss/go-tuple"
 	"github.com/stretchr/testify/require"
 )
 
 func TestT5_New(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
-	require.Equal(t, tuple.T5[string, string, string, string, string]{
+	tup := New5("1", "2", "3", "4", "5")
+	require.Equal(t, T5[string, string, string, string, string]{
 		V1: "1",
 		V2: "2",
 		V3: "3",
@@ -19,12 +18,12 @@ func TestT5_New(t *testing.T) {
 }
 
 func TestT5_Len(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, 5, tup.Len())
 }
 
 func TestT5_Values(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	v1, v2, v3, v4, v5 := tup.Values()
 	require.Equal(t, "1", v1)
 	require.Equal(t, "2", v2)
@@ -34,24 +33,24 @@ func TestT5_Values(t *testing.T) {
 }
 
 func TestT5_String(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, `["1" "2" "3" "4" "5"]`, tup.String())
 }
 
 func TestT5_GoString(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, `tuple.T5[string, string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4", V5: "5"}`, tup.GoString())
 }
 
 func TestT5_ToArray(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, [5]any{
 		"1", "2", "3", "4", "5",
 	}, tup.Array())
 }
 
 func TestT5_ToSlice(t *testing.T) {
-	tup := tuple.New5("1", "2", "3", "4", "5")
+	tup := New5("1", "2", "3", "4", "5")
 	require.Equal(t, []any{
 		"1", "2", "3", "4", "5",
 	}, tup.Slice())
@@ -104,8 +103,8 @@ func TestT5_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T5[string, string, string, string, string] {
-				return tuple.FromArray5X[string, string, string, string, string](tt.array)
+			do := func() T5[string, string, string, string, string] {
+				return FromArray5X[string, string, string, string, string](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -115,7 +114,7 @@ func TestT5_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New5("1", "2", "3", "4", "5"), do())
+			require.Equal(t, New5("1", "2", "3", "4", "5"), do())
 		})
 	}
 }
@@ -167,14 +166,14 @@ func TestT5_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromArray5[string, string, string, string, string](tt.array)
+			tup, err := FromArray5[string, string, string, string, string](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New5("1", "2", "3", "4", "5"), tup)
+			require.Equal(t, New5("1", "2", "3", "4", "5"), tup)
 		})
 	}
 }
@@ -246,8 +245,8 @@ func TestT5_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T5[string, string, string, string, string] {
-				return tuple.FromSlice5X[string, string, string, string, string](tt.slice)
+			do := func() T5[string, string, string, string, string] {
+				return FromSlice5X[string, string, string, string, string](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -257,7 +256,7 @@ func TestT5_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New5("1", "2", "3", "4", "5"), do())
+			require.Equal(t, New5("1", "2", "3", "4", "5"), do())
 		})
 	}
 }
@@ -329,14 +328,14 @@ func TestT5_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromSlice5[string, string, string, string, string](tt.slice)
+			tup, err := FromSlice5[string, string, string, string, string](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New5("1", "2", "3", "4", "5"), tup)
+			require.Equal(t, New5("1", "2", "3", "4", "5"), tup)
 		})
 	}
 }

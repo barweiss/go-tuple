@@ -1,10 +1,9 @@
-package tuple_test
+package tuple
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/barweiss/go-tuple"
 )
 
 {{/* These variables can be used when the context of dot changes. */}}
@@ -12,8 +11,8 @@ import (
 {{$len := .Len}}
 
 func TestT{{.Len}}_New(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
-	require.Equal(t, tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	require.Equal(t, T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
 		{{range .Indexes -}}
 		V{{.}}: {{. | quote}},
 		{{end}}
@@ -21,12 +20,12 @@ func TestT{{.Len}}_New(t *testing.T) {
 }
 
 func TestT{{.Len}}_Len(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, {{.Len}}, tup.Len())
 }
 
 func TestT{{.Len}}_Values(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}v{{$index}}{{end}} := tup.Values()
 	{{range .Indexes -}}
 	require.Equal(t, {{. | quote}}, v{{.}})
@@ -34,12 +33,12 @@ func TestT{{.Len}}_Values(t *testing.T) {
 }
 
 func TestT{{.Len}}_String(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, `[{{range $i, $index := .Indexes}}{{if gt $i 0}} {{end}}{{. | quote}}{{end}}]`, tup.String())
 }
 
 func TestT{{.Len}}_GoString(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, `tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
 		{{- range $i, $index := .Indexes -}}
 		{{- if gt $i 0}}, {{end -}}
@@ -49,14 +48,14 @@ func TestT{{.Len}}_GoString(t *testing.T) {
 }
 
 func TestT{{.Len}}_ToArray(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, [{{.Len}}]any{
 		{{range .Indexes -}}{{. | quote}},{{end}}
 	}, tup.Array())
 }
 
 func TestT{{.Len}}_ToSlice(t *testing.T) {
-	tup := tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, []any{
 		{{range .Indexes -}}{{. | quote}},{{end}}
 	}, tup.Slice())
@@ -94,8 +93,8 @@ func TestT{{.Len}}_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func () tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
-				return tuple.FromArray{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.array)
+			do := func () T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
+				return FromArray{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -105,7 +104,7 @@ func TestT{{.Len}}_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
+			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
 		})
 	}
 }
@@ -142,14 +141,14 @@ func TestT{{.Len}}_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromArray{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.array)
+			tup, err := FromArray{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
+			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
 		})
 	}
 }
@@ -206,8 +205,8 @@ func TestT{{.Len}}_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func () tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
-				return tuple.FromSlice{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.slice)
+			do := func () T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
+				return FromSlice{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -217,7 +216,7 @@ func TestT{{.Len}}_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
+			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
 		})
 	}
 }
@@ -274,14 +273,14 @@ func TestT{{.Len}}_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromSlice{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.slice)
+			tup, err := FromSlice{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
+			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
 		})
 	}
 }
