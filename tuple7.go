@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"constraints"
 	"fmt"
 )
 
@@ -163,4 +164,129 @@ func FromSlice7X[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 any](values []any) T7[Ty1, Ty
 	v7 := values[6].(Ty7)
 
 	return New7(v1, v2, v3, v4, v5, v6, v7)
+}
+
+// Equal7 returns whether the host tuple is equal to the other tuple.
+// All tuple elements of the host and guest parameters must match the "comparable" built-in constraint.
+// To test equality of tuples that hold custom Equalable values, use the Equal7E function.
+// To test equality of tuples that hold custom Comparable values, use the Equal7C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 comparable](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return host.V1 == guest.V1 && host.V2 == guest.V2 && host.V3 == guest.V3 && host.V4 == guest.V4 && host.V5 == guest.V5 && host.V6 == guest.V6 && host.V7 == guest.V7
+}
+
+// Equal7E returns whether the host tuple is semantically equal to the guest tuple.
+// All tuple elements of the host and guest parameters must match the Equalable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal7 function.
+// To test equality of tuples that hold custom Comparable values, use the Equal7C function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal7E[Ty1 Equalable[Ty1], Ty2 Equalable[Ty2], Ty3 Equalable[Ty3], Ty4 Equalable[Ty4], Ty5 Equalable[Ty5], Ty6 Equalable[Ty6], Ty7 Equalable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return host.V1.Equal(guest.V1) && host.V2.Equal(guest.V2) && host.V3.Equal(guest.V3) && host.V4.Equal(guest.V4) && host.V5.Equal(guest.V5) && host.V6.Equal(guest.V6) && host.V7.Equal(guest.V7)
+}
+
+// Equal7C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To test equality of tuples that hold built-in "comparable" values, use the Equal7 function.
+// To test equality of tuples that hold custom Equalable values, use the Equal7E function.
+// Otherwise, use Equal or reflect.DeepEqual to test tuples of any types.
+func Equal7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return host.V1.CompareTo(guest.V1).EQ() && host.V2.CompareTo(guest.V2).EQ() && host.V3.CompareTo(guest.V3).EQ() && host.V4.CompareTo(guest.V4).EQ() && host.V5.CompareTo(guest.V5).EQ() && host.V6.CompareTo(guest.V6).EQ() && host.V7.CompareTo(guest.V7).EQ()
+}
+
+// Compare7 returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the Compare7C function.
+func Compare7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return compareOrdered(host.V1, guest.V1) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V2, guest.V2) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V3, guest.V3) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V4, guest.V4) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V5, guest.V5) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V6, guest.V6) },
+
+		func() OrderedComparisonResult { return compareOrdered(host.V7, guest.V7) },
+	)
+}
+
+// Compare7C returns whether the host tuple is semantically less than, equal to, or greater than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the Compare7 function.
+func Compare7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) OrderedComparisonResult {
+	return multiCompare(
+		func() OrderedComparisonResult { return host.V1.CompareTo(guest.V1) },
+
+		func() OrderedComparisonResult { return host.V2.CompareTo(guest.V2) },
+
+		func() OrderedComparisonResult { return host.V3.CompareTo(guest.V3) },
+
+		func() OrderedComparisonResult { return host.V4.CompareTo(guest.V4) },
+
+		func() OrderedComparisonResult { return host.V5.CompareTo(guest.V5) },
+
+		func() OrderedComparisonResult { return host.V6.CompareTo(guest.V6) },
+
+		func() OrderedComparisonResult { return host.V7.CompareTo(guest.V7) },
+	)
+}
+
+// LessThan7 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessThan7C function.
+func LessThan7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7(host, guest).LT()
+}
+
+// LessThan7C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessThan7 function.
+func LessThan7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7C(host, guest).LT()
+}
+
+// LessOrEqual7 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the LessOrEqual7C function.
+func LessOrEqual7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7(host, guest).LE()
+}
+
+// LessOrEqual7C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the LessOrEqual7 function.
+func LessOrEqual7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7C(host, guest).LE()
+}
+
+// GreaterThan7 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterThan7C function.
+func GreaterThan7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7(host, guest).GT()
+}
+
+// GreaterThan7C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterThan7 function.
+func GreaterThan7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7C(host, guest).GT()
+}
+
+// GreaterOrEqual7 returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the "Ordered" constraint.
+// To compare tuples that hold custom comparable values, use the GreaterOrEqual7C function.
+func GreaterOrEqual7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7(host, guest).GE()
+}
+
+// GreaterOrEqual7C returns whether the host tuple is semantically less than the guest tuple.
+// All tuple elements of the host and guest parameters must match the Comparable constraint.
+// To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual7 function.
+func GreaterOrEqual7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
+	return Compare7C(host, guest).GE()
 }

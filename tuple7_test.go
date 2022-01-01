@@ -36,6 +36,194 @@ func TestT7_Values(t *testing.T) {
 	require.Equal(t, "7", v7)
 }
 
+func TestT7_Compare(t *testing.T) {
+	lesser := New7(1, 2, 3, 4, 5, 6, 7)
+	greater := New7(2, 3, 4, 5, 6, 7, 8)
+
+	tests := []struct {
+		name        string
+		host, guest T7[int, int, int, int, int, int, int]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare7(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal7(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan7(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual7(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan7(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual7(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT7_Compare_Approx(t *testing.T) {
+	lesser := New7(approximationHelper("1"), approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"))
+	greater := New7(approximationHelper("2"), approximationHelper("3"), approximationHelper("4"), approximationHelper("5"), approximationHelper("6"), approximationHelper("7"), approximationHelper("8"))
+
+	tests := []struct {
+		name        string
+		host, guest T7[approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper, approximationHelper]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare7(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal7(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan7(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual7(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan7(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual7(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT7_CompareC(t *testing.T) {
+	lesser := New7(stringComparable("1"), stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"))
+	greater := New7(stringComparable("2"), stringComparable("3"), stringComparable("4"), stringComparable("5"), stringComparable("6"), stringComparable("7"), stringComparable("8"))
+
+	tests := []struct {
+		name        string
+		host, guest T7[stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable, stringComparable]
+		want        OrderedComparisonResult
+		wantEQ      bool
+		wantLT      bool
+		wantLE      bool
+		wantGT      bool
+		wantGE      bool
+	}{
+		{
+			name:   "less than",
+			host:   lesser,
+			guest:  greater,
+			want:   -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name:   "greater than",
+			host:   greater,
+			guest:  lesser,
+			want:   1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name:   "equal",
+			host:   lesser,
+			guest:  lesser,
+			want:   0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Compare7C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal7C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan7C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual7C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan7C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual7C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT7_EqualE(t *testing.T) {
+	a := New7(intEqualable(1), intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7))
+	b := New7(intEqualable(2), intEqualable(3), intEqualable(4), intEqualable(5), intEqualable(6), intEqualable(7), intEqualable(8))
+
+	require.False(t, Equal7E(a, b))
+	require.True(t, Equal7E(a, a))
+}
+
 func TestT7_String(t *testing.T) {
 	tup := New7("1", "2", "3", "4", "5", "6", "7")
 	require.Equal(t, `["1" "2" "3" "4" "5" "6" "7"]`, tup.String())

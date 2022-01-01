@@ -11,7 +11,7 @@ import (
 {{$len := .Len}}
 
 func TestT{{.Len}}_New(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
 		{{range .Indexes -}}
 		V{{.}}: {{. | quote}},
@@ -20,25 +20,213 @@ func TestT{{.Len}}_New(t *testing.T) {
 }
 
 func TestT{{.Len}}_Len(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, {{.Len}}, tup.Len())
 }
 
 func TestT{{.Len}}_Values(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}v{{$index}}{{end}} := tup.Values()
 	{{range .Indexes -}}
 	require.Equal(t, {{. | quote}}, v{{.}})
 	{{end -}}
 }
 
+func TestT{{.Len}}_Compare(t *testing.T) {
+	lesser := New{{.Len}}({{range .Indexes}}{{.}},{{end}})
+	greater := New{{.Len}}({{range .Indexes}}{{. | inc}},{{end}})
+
+	tests := []struct{
+		name string
+		host, guest T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}int{{end}}]
+		want OrderedComparisonResult
+		wantEQ bool
+		wantLT bool
+		wantLE bool
+		wantGT bool
+		wantGE bool
+	}{
+		{
+			name: "less than",
+			host: lesser,
+			guest: greater,
+			want: -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name: "greater than",
+			host: greater,
+			guest: lesser,
+			want: 1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name: "equal",
+			host: lesser,
+			guest: lesser,
+			want: 0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func (t *testing.T) {
+			got := Compare{{.Len}}(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual{{.Len}}(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT{{.Len}}_Compare_Approx(t *testing.T) {
+	lesser := New{{.Len}}({{range .Indexes}}approximationHelper({{. | quote}}),{{end}})
+	greater := New{{.Len}}({{range .Indexes}}approximationHelper({{. | inc | quote}}),{{end}})
+
+	tests := []struct{
+		name string
+		host, guest T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}approximationHelper{{end}}]
+		want OrderedComparisonResult
+		wantEQ bool
+		wantLT bool
+		wantLE bool
+		wantGT bool
+		wantGE bool
+	}{
+		{
+			name: "less than",
+			host: lesser,
+			guest: greater,
+			want: -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name: "greater than",
+			host: greater,
+			guest: lesser,
+			want: 1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name: "equal",
+			host: lesser,
+			guest: lesser,
+			want: 0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func (t *testing.T) {
+			got := Compare{{.Len}}(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan{{.Len}}(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual{{.Len}}(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT{{.Len}}_CompareC(t *testing.T) {
+	lesser := New{{.Len}}({{range .Indexes}}stringComparable({{. | quote}}),{{end}})
+	greater := New{{.Len}}({{range .Indexes}}stringComparable({{. | inc | quote}}),{{end}})
+
+	tests := []struct{
+		name string
+		host, guest T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}stringComparable{{end}}]
+		want OrderedComparisonResult
+		wantEQ bool
+		wantLT bool
+		wantLE bool
+		wantGT bool
+		wantGE bool
+	}{
+		{
+			name: "less than",
+			host: lesser,
+			guest: greater,
+			want: -1,
+			wantLT: true,
+			wantLE: true,
+		},
+		{
+			name: "greater than",
+			host: greater,
+			guest: lesser,
+			want: 1,
+			wantGT: true,
+			wantGE: true,
+		},
+		{
+			name: "equal",
+			host: lesser,
+			guest: lesser,
+			want: 0,
+			wantEQ: true,
+			wantLE: true,
+			wantGE: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func (t *testing.T) {
+			got := Compare{{.Len}}C(tt.host, tt.guest)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.wantEQ, got.EQ())
+			require.Equal(t, tt.wantLT, got.LT())
+			require.Equal(t, tt.wantLE, got.LE())
+			require.Equal(t, tt.wantGT, got.GT())
+			require.Equal(t, tt.wantGE, got.GE())
+
+			require.Equal(t, tt.wantEQ, Equal{{.Len}}C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLT, LessThan{{.Len}}C(tt.host, tt.guest))
+			require.Equal(t, tt.wantLE, LessOrEqual{{.Len}}C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGT, GreaterThan{{.Len}}C(tt.host, tt.guest))
+			require.Equal(t, tt.wantGE, GreaterOrEqual{{.Len}}C(tt.host, tt.guest))
+		})
+	}
+}
+
+func TestT{{.Len}}_EqualE(t *testing.T) {
+	a := New{{.Len}}({{range .Indexes}}intEqualable({{.}}),{{end}})
+	b := New{{.Len}}({{range .Indexes}}intEqualable({{. | inc}}),{{end}})
+
+	require.False(t, Equal{{.Len}}E(a, b))
+	require.True(t, Equal{{.Len}}E(a, a))
+}
+
 func TestT{{.Len}}_String(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, `[{{range $i, $index := .Indexes}}{{if gt $i 0}} {{end}}{{. | quote}}{{end}}]`, tup.String())
 }
 
 func TestT{{.Len}}_GoString(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, `tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
 		{{- range $i, $index := .Indexes -}}
 		{{- if gt $i 0}}, {{end -}}
@@ -48,14 +236,14 @@ func TestT{{.Len}}_GoString(t *testing.T) {
 }
 
 func TestT{{.Len}}_ToArray(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, [{{.Len}}]any{
 		{{range .Indexes -}}{{. | quote}},{{end}}
 	}, tup.Array())
 }
 
 func TestT{{.Len}}_ToSlice(t *testing.T) {
-	tup := New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}})
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 	require.Equal(t, []any{
 		{{range .Indexes -}}{{. | quote}},{{end}}
 	}, tup.Slice())
@@ -104,7 +292,7 @@ func TestT{{.Len}}_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
+			require.Equal(t, New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}), do())
 		})
 	}
 }
@@ -148,7 +336,7 @@ func TestT{{.Len}}_FromArray(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
+			require.Equal(t, New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
 		})
 	}
 }
@@ -216,7 +404,7 @@ func TestT{{.Len}}_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), do())
+			require.Equal(t, New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}), do())
 		})
 	}
 }
@@ -280,7 +468,7 @@ func TestT{{.Len}}_FromSlice(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, New{{len .Indexes}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
+			require.Equal(t, New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
 		})
 	}
 }

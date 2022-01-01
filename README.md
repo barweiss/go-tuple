@@ -57,6 +57,100 @@ tup := tuple.New2(5, "hi!")
 a, b := tup.Values()
 ```
 
+## Comparison
+
+Tuples are compared from the first element to the last.
+For example, the tuple `[1 2 3]` is greater than `[1 2 4]` but less than `[2 2 2]`.
+
+```go
+fmt.Println(tuple.Equal3(tuple.New3(1, 2, 3), tuple.New3(3, 3, 3))) // false.
+fmt.Println(tuple.LessThan3(tuple.New3(1, 2, 3), tuple.New3(3, 2, 1))) // true.
+
+tups := []tuple.T3{
+    tuple.New3("foo", 2, -23),
+    tuple.New3("foo", 72, 15),
+    tuple.New3("bar", -4, 43),
+}
+sort.Slice(tups, func (i, j int) {
+    return tuple.LessThan3(tups[i], tups[j])
+})
+
+fmt.Println(tups) // [["bar", -4, 43], ["foo", 2, -23], ["foo", 72, 15]].
+```
+
+---
+**NOTE**
+
+In order to compare tuples, all tuple elements must match `constraints.Ordered`.
+
+See [Custom comparison](#custom-comparison) in order to see how to compare tuples
+with arbitrary element values.
+
+---
+
+### Comparison result
+
+```go
+// Compare* functions return an OrderedComparisonResult value.
+result := tuple.Compare3(tuple.New3(1, 2, 3), tuple.New3(3, 2, 1))
+
+// OrderedComparisonResult values are wrapped integers.
+fmt.Println(result) // -1
+
+// OrderedComparisonResult expose various method to see the result
+// in a more readable way.
+fmt.Println(result.GreaterThan()) // false
+```
+
+### Custom comparison
+
+The package provides the `CompareC` comparison functions varation in order to compare tuples of complex
+comparable types.
+
+For a type to be comparable, it must match the `Comparable` or `Equalable` constraints.
+
+```go
+type Comparable[T any] interface {
+	CompareTo(guest T) OrderedComparisonResult
+}
+
+type Equalable[T any] interface {
+	Equal(guest T) bool
+}
+```
+
+```go
+type person struct {
+	name string
+	age  int
+}
+
+func (p person) CompareTo(guest person) tuple.OrderedComparisonResult {
+	if p.name < guest.name {
+		return -1
+	}
+	if p.name > guest.name {
+		return 1
+	}
+	return 0
+}
+
+func main() {
+	tup1 := tuple.New2(person{name: "foo", age: 20}, person{name: "bar", age: 24})
+	tup2 := tuple.New2(person{name: "bar", age: 20}, person{name: "baz", age: 24})
+
+	fmt.Println(tuple.LessThan2C(tup1, tup2)) // true.
+}
+```
+
+In order to call the complex types variation of the comparable functions, __all__ tuple types must match the `Comparable` constraint.
+
+While this is not ideal, this a known inconvenience given the current type parameters capabilities in Go.
+Some solutions have been porposed for this issue ([lesser](https://github.com/lelysses/lesser), for example, beatifully articulates the issue),
+but they still demand features that are not yet implemented by the language.
+
+Once the language will introduce more convenient ways for generic comparisons, this package will adopt it.
+
 ## Formatting
 
 Tuples implement the `Stringer` and `GoStringer` interfaces.
