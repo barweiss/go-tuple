@@ -1,15 +1,14 @@
-package tuple_test
+package tuple
 
 import (
 	"testing"
 
-	"github.com/barweiss/go-tuple"
 	"github.com/stretchr/testify/require"
 )
 
 func TestT4_New(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
-	require.Equal(t, tuple.T4[string, string, string, string]{
+	tup := New4("1", "2", "3", "4")
+	require.Equal(t, T4[string, string, string, string]{
 		V1: "1",
 		V2: "2",
 		V3: "3",
@@ -18,12 +17,12 @@ func TestT4_New(t *testing.T) {
 }
 
 func TestT4_Len(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	require.Equal(t, 4, tup.Len())
 }
 
 func TestT4_Values(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	v1, v2, v3, v4 := tup.Values()
 	require.Equal(t, "1", v1)
 	require.Equal(t, "2", v2)
@@ -32,24 +31,24 @@ func TestT4_Values(t *testing.T) {
 }
 
 func TestT4_String(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	require.Equal(t, `["1" "2" "3" "4"]`, tup.String())
 }
 
 func TestT4_GoString(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	require.Equal(t, `tuple.T4[string, string, string, string]{V1: "1", V2: "2", V3: "3", V4: "4"}`, tup.GoString())
 }
 
 func TestT4_ToArray(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	require.Equal(t, [4]any{
 		"1", "2", "3", "4",
 	}, tup.Array())
 }
 
 func TestT4_ToSlice(t *testing.T) {
-	tup := tuple.New4("1", "2", "3", "4")
+	tup := New4("1", "2", "3", "4")
 	require.Equal(t, []any{
 		"1", "2", "3", "4",
 	}, tup.Slice())
@@ -96,8 +95,8 @@ func TestT4_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T4[string, string, string, string] {
-				return tuple.FromArray4X[string, string, string, string](tt.array)
+			do := func() T4[string, string, string, string] {
+				return FromArray4X[string, string, string, string](tt.array)
 			}
 
 			if tt.wantPanic {
@@ -107,7 +106,7 @@ func TestT4_FromArrayX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New4("1", "2", "3", "4"), do())
+			require.Equal(t, New4("1", "2", "3", "4"), do())
 		})
 	}
 }
@@ -153,14 +152,14 @@ func TestT4_FromArray(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromArray4[string, string, string, string](tt.array)
+			tup, err := FromArray4[string, string, string, string](tt.array)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New4("1", "2", "3", "4"), tup)
+			require.Equal(t, New4("1", "2", "3", "4"), tup)
 		})
 	}
 }
@@ -226,8 +225,8 @@ func TestT4_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func() tuple.T4[string, string, string, string] {
-				return tuple.FromSlice4X[string, string, string, string](tt.slice)
+			do := func() T4[string, string, string, string] {
+				return FromSlice4X[string, string, string, string](tt.slice)
 			}
 
 			if tt.wantPanic {
@@ -237,7 +236,7 @@ func TestT4_FromSliceX(t *testing.T) {
 				return
 			}
 
-			require.Equal(t, tuple.New4("1", "2", "3", "4"), do())
+			require.Equal(t, New4("1", "2", "3", "4"), do())
 		})
 	}
 }
@@ -303,14 +302,14 @@ func TestT4_FromSlice(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tup, err := tuple.FromSlice4[string, string, string, string](tt.slice)
+			tup, err := FromSlice4[string, string, string, string](tt.slice)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 
 			require.NoError(t, err)
-			require.Equal(t, tuple.New4("1", "2", "3", "4"), tup)
+			require.Equal(t, New4("1", "2", "3", "4"), tup)
 		})
 	}
 }
