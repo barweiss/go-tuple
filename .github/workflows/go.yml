@@ -22,11 +22,6 @@ jobs:
         go install golang.org/dl/go1.18beta1@latest
         go1.18beta1 download
 
-    - name: Lint
-      uses: golangci/golangci-lint-action@v2
-      with:
-        version: latest
-
     - name: Build
       run: go1.18beta1 build -v ./...
 
@@ -35,7 +30,7 @@ jobs:
 
     - name: Calcualte coverage
       run: |
-        go test -v -covermode=count -coverprofile=coverage.out
+        go1.18beta1 test -v -covermode=count -coverprofile=coverage.out
     - name: Convert coverage.out to coverage.lcov
       uses: jandelgado/gcov2lcov-action@v1.0.6
     - name: Coveralls
