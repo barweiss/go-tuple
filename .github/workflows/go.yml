@@ -7,8 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-
-  build:
+  build-test-coverage:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,3 +27,14 @@ jobs:
 
     - name: Test
       run: go1.18beta1 test -v ./...
+
+    - name: Calcualte coverage
+      run: |
+        go1.18beta1 test -v -covermode=count -coverprofile=coverage.out
+    - name: Convert coverage.out to coverage.lcov
+      uses: jandelgado/gcov2lcov-action@v1.0.6
+    - name: Coveralls
+      uses: coverallsapp/github-action@v1.1.2
+      with:
+        github-token: ${{ secrets.github_token }}
+        path-to-lcov: coverage.lcov
