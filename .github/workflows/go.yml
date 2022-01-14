@@ -7,8 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-
-  build:
+  lint-build-test-coverage:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -23,8 +22,24 @@ jobs:
         go install golang.org/dl/go1.18beta1@latest
         go1.18beta1 download
 
+    - name: Lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: latest
+
     - name: Build
       run: go1.18beta1 build -v ./...
 
     - name: Test
       run: go1.18beta1 test -v ./...
+
+    - name: Calcualte coverage
+      run: |
+        go test -v -covermode=count -coverprofile=coverage.out
+    - name: Convert coverage.out to coverage.lcov
+      uses: jandelgado/gcov2lcov-action@v1.0.6
+    - name: Coveralls
+      uses: coverallsapp/github-action@v1.1.2
+      with:
+        github-token: ${{ secrets.github_token }}
+        path-to-lcov: coverage.lcov
