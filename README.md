@@ -1,6 +1,7 @@
 # go-tuple: Generic tuples for Go 1.18.
 
 [![Go](https://github.com/barweiss/go-tuple/actions/workflows/go.yml/badge.svg)](https://github.com/barweiss/go-tuple/actions/workflows/go.yml)
+[![Coverage Status](https://coveralls.io/repos/github/barweiss/go-tuple/badge.svg)](https://coveralls.io/github/barweiss/go-tuple)
 
 Go 1.18 tuple implementation.
 

@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  lint-build-test-coverage:
+  build-test-coverage:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
