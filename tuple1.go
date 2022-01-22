@@ -153,42 +153,42 @@ func LessThan1C[Ty1 Comparable[Ty1]](host, guest T1[Ty1]) bool {
 	return Compare1C(host, guest).LT()
 }
 
-// LessOrEqual1 returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual1 returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the LessOrEqual1C function.
 func LessOrEqual1[Ty1 constraints.Ordered](host, guest T1[Ty1]) bool {
 	return Compare1(host, guest).LE()
 }
 
-// LessOrEqual1C returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual1C returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the LessOrEqual1 function.
 func LessOrEqual1C[Ty1 Comparable[Ty1]](host, guest T1[Ty1]) bool {
 	return Compare1C(host, guest).LE()
 }
 
-// GreaterThan1 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan1 returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterThan1C function.
 func GreaterThan1[Ty1 constraints.Ordered](host, guest T1[Ty1]) bool {
 	return Compare1(host, guest).GT()
 }
 
-// GreaterThan1C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan1C returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterThan1 function.
 func GreaterThan1C[Ty1 Comparable[Ty1]](host, guest T1[Ty1]) bool {
 	return Compare1C(host, guest).GT()
 }
 
-// GreaterOrEqual1 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual1 returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterOrEqual1C function.
 func GreaterOrEqual1[Ty1 constraints.Ordered](host, guest T1[Ty1]) bool {
 	return Compare1(host, guest).GE()
 }
 
-// GreaterOrEqual1C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual1C returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual1 function.
 func GreaterOrEqual1C[Ty1 Comparable[Ty1]](host, guest T1[Ty1]) bool {

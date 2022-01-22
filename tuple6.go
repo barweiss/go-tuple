@@ -233,42 +233,42 @@ func LessThan6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], T
 	return Compare6C(host, guest).LT()
 }
 
-// LessOrEqual6 returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual6 returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the LessOrEqual6C function.
 func LessOrEqual6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
 	return Compare6(host, guest).LE()
 }
 
-// LessOrEqual6C returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual6C returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the LessOrEqual6 function.
 func LessOrEqual6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
 	return Compare6C(host, guest).LE()
 }
 
-// GreaterThan6 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan6 returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterThan6C function.
 func GreaterThan6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
 	return Compare6(host, guest).GT()
 }
 
-// GreaterThan6C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan6C returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterThan6 function.
 func GreaterThan6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
 	return Compare6C(host, guest).GT()
 }
 
-// GreaterOrEqual6 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual6 returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterOrEqual6C function.
 func GreaterOrEqual6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6 constraints.Ordered](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {
 	return Compare6(host, guest).GE()
 }
 
-// GreaterOrEqual6C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual6C returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual6 function.
 func GreaterOrEqual6C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6]](host, guest T6[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6]) bool {

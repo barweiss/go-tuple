@@ -217,42 +217,42 @@ func LessThan5C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], T
 	return Compare5C(host, guest).LT()
 }
 
-// LessOrEqual5 returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual5 returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the LessOrEqual5C function.
 func LessOrEqual5[Ty1, Ty2, Ty3, Ty4, Ty5 constraints.Ordered](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
 	return Compare5(host, guest).LE()
 }
 
-// LessOrEqual5C returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual5C returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the LessOrEqual5 function.
 func LessOrEqual5C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5]](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
 	return Compare5C(host, guest).LE()
 }
 
-// GreaterThan5 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan5 returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterThan5C function.
 func GreaterThan5[Ty1, Ty2, Ty3, Ty4, Ty5 constraints.Ordered](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
 	return Compare5(host, guest).GT()
 }
 
-// GreaterThan5C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan5C returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterThan5 function.
 func GreaterThan5C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5]](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
 	return Compare5C(host, guest).GT()
 }
 
-// GreaterOrEqual5 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual5 returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterOrEqual5C function.
 func GreaterOrEqual5[Ty1, Ty2, Ty3, Ty4, Ty5 constraints.Ordered](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
 	return Compare5(host, guest).GE()
 }
 
-// GreaterOrEqual5C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual5C returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual5 function.
 func GreaterOrEqual5C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5]](host, guest T5[Ty1, Ty2, Ty3, Ty4, Ty5]) bool {
