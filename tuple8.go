@@ -265,42 +265,42 @@ func LessThan8C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], T
 	return Compare8C(host, guest).LT()
 }
 
-// LessOrEqual8 returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual8 returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the LessOrEqual8C function.
 func LessOrEqual8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 constraints.Ordered](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
 	return Compare8(host, guest).LE()
 }
 
-// LessOrEqual8C returns whether the host tuple is semantically less than the guest tuple.
+// LessOrEqual8C returns whether the host tuple is semantically less than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the LessOrEqual8 function.
 func LessOrEqual8C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7], Ty8 Comparable[Ty8]](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
 	return Compare8C(host, guest).LE()
 }
 
-// GreaterThan8 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan8 returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterThan8C function.
 func GreaterThan8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 constraints.Ordered](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
 	return Compare8(host, guest).GT()
 }
 
-// GreaterThan8C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterThan8C returns whether the host tuple is semantically greater than the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterThan8 function.
 func GreaterThan8C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7], Ty8 Comparable[Ty8]](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
 	return Compare8C(host, guest).GT()
 }
 
-// GreaterOrEqual8 returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual8 returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the "Ordered" constraint.
 // To compare tuples that hold custom comparable values, use the GreaterOrEqual8C function.
 func GreaterOrEqual8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8 constraints.Ordered](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
 	return Compare8(host, guest).GE()
 }
 
-// GreaterOrEqual8C returns whether the host tuple is semantically less than the guest tuple.
+// GreaterOrEqual8C returns whether the host tuple is semantically greater than or equal to the guest tuple.
 // All tuple elements of the host and guest parameters must match the Comparable constraint.
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual8 function.
 func GreaterOrEqual8C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7], Ty8 Comparable[Ty8]](host, guest T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) bool {
