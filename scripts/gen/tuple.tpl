@@ -2,7 +2,7 @@ package tuple
 
 import (
 	"fmt"
-	"constraints"
+	"golang.org/x/exp/constraints"
 )
 
 {{/* $typeRef can be used when the context of dot changes. */}}

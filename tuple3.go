@@ -1,8 +1,8 @@
 package tuple
 
 import (
-	"constraints"
 	"fmt"
+	"golang.org/x/exp/constraints"
 )
 
 // T3 is a tuple type holding 3 generic values.
