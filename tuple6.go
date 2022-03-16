@@ -1,8 +1,8 @@
 package tuple
 
 import (
-	"constraints"
 	"fmt"
+	"golang.org/x/exp/constraints"
 )
 
 // T6 is a tuple type holding 6 generic values.

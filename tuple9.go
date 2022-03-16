@@ -1,8 +1,8 @@
 package tuple
 
 import (
-	"constraints"
 	"fmt"
+	"golang.org/x/exp/constraints"
 )
 
 // T9 is a tuple type holding 9 generic values.
