@@ -1,8 +1,8 @@
 package tuple
 
 import (
-	"constraints"
 	"fmt"
+	"golang.org/x/exp/constraints"
 )
 
 // T5 is a tuple type holding 5 generic values.
