@@ -21,7 +21,25 @@ Tuples come in various sizes, from 1 to 9 elements.
 longerTuple := tuple.New5("this", "is", "one", "long", "tuple")
 ```
 
-Tuples can be used as slice or array items, map keys or values, and as channel payloads.
+Tuples can be used as slice or array items, map keys or values, and as channel payloads:
+
+```go
+// Map holding tuples.
+tupInMap := make(map[tuple.T2[string, string]]Person)
+tupInMap[tuple.New2("John", "Doe")] = Person{
+	FirstName: "John",
+	LastName: "Doe",
+	// ...
+}
+
+// Channel holding tuples.
+tupInChan := make(chan tuple.T2[string, error])
+go func() {
+	defer close(tupInChan)
+	tupInChan <- tuple.New2(os.Getwd())
+}()
+fmt.Print(<-tupInChan)
+```
 
 # Features
 
