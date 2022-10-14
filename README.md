@@ -1,4 +1,4 @@
-# go-tuple: Generic tuples for Go 1.18.
+# go-tuple: Generic tuples for Go 1.18+.
 
 [![Go](https://github.com/barweiss/go-tuple/actions/workflows/go.yml/badge.svg)](https://github.com/barweiss/go-tuple/actions/workflows/go.yml)
 [![Coverage Status](https://coveralls.io/repos/github/barweiss/go-tuple/badge.svg)](https://coveralls.io/github/barweiss/go-tuple)
@@ -6,7 +6,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/barweiss/go-tuple.svg)](https://pkg.go.dev/github.com/barweiss/go-tuple)
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)  
 
-Go 1.18 tuple implementation.
+Go 1.18+ tuple implementation.
 
 Use tuples to store 1 or more values without needing to write a custom struct.
 
