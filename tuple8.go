@@ -1,9 +1,10 @@
 package tuple
 
 import (
-	"constraints"
 	"encoding/json"
 	"fmt"
+
+	"golang.org/x/exp/constraints"
 )
 
 // T8 is a tuple type holding 8 generic values.

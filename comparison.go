@@ -1,7 +1,7 @@
 package tuple
 
 import (
-	"constraints"
+	"golang.org/x/exp/constraints"
 )
 
 // OrderedComparisonResult represents the result of a tuple ordered comparison.

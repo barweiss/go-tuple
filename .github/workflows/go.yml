@@ -15,22 +15,17 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
-
-    - name: Install Go 1.18
-      run: |
-        go install golang.org/dl/go1.18beta1@latest
-        go1.18beta1 download
+        go-version: 1.18
 
     - name: Build
-      run: go1.18beta1 build -v ./...
+      run: go build -v ./...
 
     - name: Test
-      run: go1.18beta1 test -v ./...
+      run: go test -v ./...
 
     - name: Calcualte coverage
       run: |
-        go1.18beta1 test -v -covermode=count -coverprofile=coverage.out
+        go test -v -covermode=count -coverprofile=coverage.out
     - name: Convert coverage.out to coverage.lcov
       uses: jandelgado/gcov2lcov-action@v1.0.6
     - name: Coveralls

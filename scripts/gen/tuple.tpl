@@ -1,9 +1,10 @@
 package tuple
 
 import (
-	"constraints"
 	"encoding/json"
 	"fmt"
+
+	"golang.org/x/exp/constraints"
 )
 
 {{/* $typeRef can be used when the context of dot changes. */}}
