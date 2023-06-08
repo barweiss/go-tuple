@@ -525,6 +525,23 @@ func TestT2_UnmarshalJSON(t *testing.T) {
 	}
 }
 
+func TestT2_Unmarshal_CustomStruct(t *testing.T) {
+	type Custom struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+
+	want := New2(Custom{Name: "1", Age: 1}, Custom{Name: "2", Age: 2})
+	var got T2[Custom, Custom]
+	err := json.Unmarshal([]byte(`[
+		{ "name": "1", "age": 1 },
+		{ "name": "2", "age": 2 }
+	]`), &got)
+
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 func TestT2_Marshal_Unmarshal(t *testing.T) {
 	tup := New2("1", "2")
 

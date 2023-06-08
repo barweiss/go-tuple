@@ -555,6 +555,25 @@ func TestT{{.Len}}_UnmarshalJSON(t *testing.T) {
 	}
 }
 
+func TestT{{.Len}}_Unmarshal_CustomStruct(t *testing.T) {
+	type Custom struct {
+		Name string `json:"name"`
+		Age int `json:"age"`
+	}
+
+	want := New{{.Len}}({{range .Indexes}}Custom{ Name: {{. | quote}}, Age: {{.}} },{{end}})
+	var got T{{.Len}}[{{range .Indexes}}Custom,{{end}}]
+	err := json.Unmarshal([]byte(`[
+		{{- range .Indexes -}}
+		{{- if ne . 1}},{{end}}
+		{ "name": {{. | quote}}, "age": {{.}} }
+		{{- end}}
+	]`), &got)
+
+	require.NoError(t, err)
+	require.Equal(t, want, got)
+}
+
 func TestT{{.Len}}_Marshal_Unmarshal(t *testing.T) {
 	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
 

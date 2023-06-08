@@ -239,16 +239,21 @@ func (t {{$typeRef}}) MarshalJSON() ([]byte, error) {
 
 // MarshalJSON unmarshals the tuple from a JSON array.
 func (t *{{$typeRef}}) UnmarshalJSON(data []byte) error {
-	var slice []any
+	// Working with json.RawMessage instead of any enables custom struct support.
+	var slice []json.RawMessage
 	if err := json.Unmarshal(data, &slice); err != nil {
-		return err
+		return fmt.Errorf("unable to unmarshal json array for tuple: %w", err)
 	}
 
-	unmarshalled, err := FromSlice{{.Len}}[{{.GenericTypesForward}}](slice)
-	if err != nil {
-		return err
+	if len(slice) != {{.Len}} {
+		return fmt.Errorf("unmarshalled json array length %d must match number of tuple values {{.Len}}", len(slice))
 	}
 
-	*t = unmarshalled
+	{{- range $index, $num := .Indexes}}
+	if err := json.Unmarshal(slice[{{$index}}], &t.V{{.}}); err != nil {
+		return fmt.Errorf("value %q at slice index {{$index}} failed to unmarshal: %w", string(slice[{{$index}}]), err)
+	}
+	{{end -}}
+
 	return nil
 }
