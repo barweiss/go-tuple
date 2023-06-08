@@ -1,8 +1,9 @@
 package tuple
 
 import (
-	"fmt"
 	"constraints"
+	"encoding/json"
+	"fmt"
 )
 
 {{/* $typeRef can be used when the context of dot changes. */}}
@@ -228,4 +229,23 @@ func GreaterOrEqual{{.Len}}[{{genericTypesDecl .Indexes "constraints.Ordered"}}]
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual{{.Len}} function.
 func GreaterOrEqual{{.Len}}C[{{genericTypesDeclGenericConstraint .Indexes "Comparable"}}](host, guest T{{.Len}}[{{.GenericTypesForward}}]) bool {
 	return Compare{{.Len}}C(host, guest).GE()
+}
+
+func (t {{$typeRef}}) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Slice())
+}
+
+func (t *{{$typeRef}}) UnmarshalJSON(data []byte) error {
+	var slice []any
+	if err := json.Unmarshal(data, &slice); err != nil {
+		return err
+	}
+
+	unmarshalled, err := FromSlice{{.Len}}[{{.GenericTypesForward}}](slice)
+	if err != nil {
+		return err
+	}
+
+	*t = unmarshalled
+	return nil
 }

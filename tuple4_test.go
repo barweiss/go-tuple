@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -500,4 +501,95 @@ func TestT4_FromSlice(t *testing.T) {
 			require.Equal(t, New4("1", "2", "3", "4"), tup)
 		})
 	}
+}
+
+func TestT4_MarshalJSON(t *testing.T) {
+	tup := New4("1", "2", "3", "4")
+
+	got, err := json.Marshal(tup)
+	require.NoError(t, err)
+	require.Equal(t, got, []byte(`["1","2","3","4"]`))
+}
+
+func TestT4_UnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		name    string
+		data    []byte
+		want    T4[string, string, string, string]
+		wantErr bool
+	}{
+		{
+			name:    "nil data",
+			data:    nil,
+			wantErr: true,
+		},
+		{
+			name:    "empty data",
+			data:    []byte{},
+			wantErr: true,
+		},
+		{
+			name:    "string data",
+			data:    []byte(`"hi"`),
+			wantErr: true,
+		},
+		{
+			name:    "empty json array",
+			data:    []byte(`[]`),
+			wantErr: true,
+		},
+		{
+			name:    "longer json array",
+			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array of invalid types",
+			data:    []byte(`[1,2,3,4]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with 1 invalid type",
+			data:    []byte(`[1,"2","3","4"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array of valid types",
+			data:    []byte(`["1","2","3","4"]`),
+			want:    New4("1", "2", "3", "4"),
+			wantErr: false,
+		},
+		{
+			name:    "json object of valid types",
+			data:    []byte(`{"V1": "1","V2": "2","V3": "3","V4": "4"}`),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var got T4[string, string, string, string]
+			err := json.Unmarshal(tt.data, &got)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestT4_Marshal_Unmarshal(t *testing.T) {
+	tup := New4("1", "2", "3", "4")
+
+	marshalled, err := json.Marshal(tup)
+	require.NoError(t, err)
+
+	var unmarshalled T4[string, string, string, string]
+	err = json.Unmarshal(marshalled, &unmarshalled)
+
+	require.NoError(t, err)
+	require.Equal(t, tup, unmarshalled)
 }

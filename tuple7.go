@@ -2,6 +2,7 @@ package tuple
 
 import (
 	"constraints"
+	"encoding/json"
 	"fmt"
 )
 
@@ -289,4 +290,23 @@ func GreaterOrEqual7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7 constraints.Ordered](host
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual7 function.
 func GreaterOrEqual7C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7]](host, guest T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) bool {
 	return Compare7C(host, guest).GE()
+}
+
+func (t T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Slice())
+}
+
+func (t *T7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7]) UnmarshalJSON(data []byte) error {
+	var slice []any
+	if err := json.Unmarshal(data, &slice); err != nil {
+		return err
+	}
+
+	unmarshalled, err := FromSlice7[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7](slice)
+	if err != nil {
+		return err
+	}
+
+	*t = unmarshalled
+	return nil
 }

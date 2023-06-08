@@ -2,6 +2,7 @@ package tuple
 
 import (
 	"constraints"
+	"encoding/json"
 	"fmt"
 )
 
@@ -321,4 +322,23 @@ func GreaterOrEqual9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9 constraints.Ord
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual9 function.
 func GreaterOrEqual9C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[Ty3], Ty4 Comparable[Ty4], Ty5 Comparable[Ty5], Ty6 Comparable[Ty6], Ty7 Comparable[Ty7], Ty8 Comparable[Ty8], Ty9 Comparable[Ty9]](host, guest T9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9]) bool {
 	return Compare9C(host, guest).GE()
+}
+
+func (t T9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Slice())
+}
+
+func (t *T9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9]) UnmarshalJSON(data []byte) error {
+	var slice []any
+	if err := json.Unmarshal(data, &slice); err != nil {
+		return err
+	}
+
+	unmarshalled, err := FromSlice9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9](slice)
+	if err != nil {
+		return err
+	}
+
+	*t = unmarshalled
+	return nil
 }

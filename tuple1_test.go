@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -418,4 +419,91 @@ func TestT1_FromSlice(t *testing.T) {
 			require.Equal(t, New1("1"), tup)
 		})
 	}
+}
+
+func TestT1_MarshalJSON(t *testing.T) {
+	tup := New1("1")
+
+	got, err := json.Marshal(tup)
+	require.NoError(t, err)
+	require.Equal(t, got, []byte(`["1"]`))
+}
+
+func TestT1_UnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		name    string
+		data    []byte
+		want    T1[string]
+		wantErr bool
+	}{
+		{
+			name:    "nil data",
+			data:    nil,
+			wantErr: true,
+		},
+		{
+			name:    "empty data",
+			data:    []byte{},
+			wantErr: true,
+		},
+		{
+			name:    "string data",
+			data:    []byte(`"hi"`),
+			wantErr: true,
+		},
+		{
+			name:    "empty json array",
+			data:    []byte(`[]`),
+			wantErr: true,
+		},
+		{
+			name:    "longer json array",
+			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array of invalid types",
+			data:    []byte(`[1]`),
+			wantErr: true,
+		},
+
+		{
+			name:    "json array of valid types",
+			data:    []byte(`["1"]`),
+			want:    New1("1"),
+			wantErr: false,
+		},
+		{
+			name:    "json object of valid types",
+			data:    []byte(`{"V1": "1"}`),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var got T1[string]
+			err := json.Unmarshal(tt.data, &got)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestT1_Marshal_Unmarshal(t *testing.T) {
+	tup := New1("1")
+
+	marshalled, err := json.Marshal(tup)
+	require.NoError(t, err)
+
+	var unmarshalled T1[string]
+	err = json.Unmarshal(marshalled, &unmarshalled)
+
+	require.NoError(t, err)
+	require.Equal(t, tup, unmarshalled)
 }

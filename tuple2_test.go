@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -444,4 +445,95 @@ func TestT2_FromSlice(t *testing.T) {
 			require.Equal(t, New2("1", "2"), tup)
 		})
 	}
+}
+
+func TestT2_MarshalJSON(t *testing.T) {
+	tup := New2("1", "2")
+
+	got, err := json.Marshal(tup)
+	require.NoError(t, err)
+	require.Equal(t, got, []byte(`["1","2"]`))
+}
+
+func TestT2_UnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		name    string
+		data    []byte
+		want    T2[string, string]
+		wantErr bool
+	}{
+		{
+			name:    "nil data",
+			data:    nil,
+			wantErr: true,
+		},
+		{
+			name:    "empty data",
+			data:    []byte{},
+			wantErr: true,
+		},
+		{
+			name:    "string data",
+			data:    []byte(`"hi"`),
+			wantErr: true,
+		},
+		{
+			name:    "empty json array",
+			data:    []byte(`[]`),
+			wantErr: true,
+		},
+		{
+			name:    "longer json array",
+			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array of invalid types",
+			data:    []byte(`[1,2]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with 1 invalid type",
+			data:    []byte(`[1,"2"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array of valid types",
+			data:    []byte(`["1","2"]`),
+			want:    New2("1", "2"),
+			wantErr: false,
+		},
+		{
+			name:    "json object of valid types",
+			data:    []byte(`{"V1": "1","V2": "2"}`),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var got T2[string, string]
+			err := json.Unmarshal(tt.data, &got)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestT2_Marshal_Unmarshal(t *testing.T) {
+	tup := New2("1", "2")
+
+	marshalled, err := json.Marshal(tup)
+	require.NoError(t, err)
+
+	var unmarshalled T2[string, string]
+	err = json.Unmarshal(marshalled, &unmarshalled)
+
+	require.NoError(t, err)
+	require.Equal(t, tup, unmarshalled)
 }

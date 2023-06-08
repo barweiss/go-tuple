@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -14,8 +15,6 @@ import (
 type templateContext struct {
 	Indexes             []int
 	Len                 int
-	TypeName            string
-	TypeDecl            string
 	GenericTypesForward string
 }
 
@@ -24,7 +23,7 @@ const maxTupleLength = 9
 
 var funcMap = template.FuncMap{
 	"quote": func(value interface{}) string {
-		return fmt.Sprintf("%q", fmt.Sprint(value))
+		return strconv.Quote(fmt.Sprint(value))
 	},
 	"inc": func(value int) int {
 		return value + 1
@@ -43,6 +42,14 @@ var funcMap = template.FuncMap{
 	},
 	"genericTypesDecl":                  genTypesDecl,
 	"genericTypesDeclGenericConstraint": genTypesDeclGenericConstraint,
+	"buildSingleTypedOverload": func(indexes []int, typ string) string {
+		typesArray := make([]string, 0, len(indexes))
+		for range indexes {
+			typesArray = append(typesArray, typ)
+		}
+
+		return fmt.Sprintf("T%d[%s]", len(indexes), strings.Join(typesArray, ", "))
+	},
 }
 
 //go:embed tuple.tpl
