@@ -1,7 +1,9 @@
 package tuple
 
 import (
+	"encoding/json"
 	"fmt"
+
 	"golang.org/x/exp/constraints"
 )
 
@@ -228,4 +230,25 @@ func GreaterOrEqual{{.Len}}[{{genericTypesDecl .Indexes "constraints.Ordered"}}]
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual{{.Len}} function.
 func GreaterOrEqual{{.Len}}C[{{genericTypesDeclGenericConstraint .Indexes "Comparable"}}](host, guest T{{.Len}}[{{.GenericTypesForward}}]) bool {
 	return Compare{{.Len}}C(host, guest).GE()
+}
+
+// MarshalJSON marshals the tuple into a JSON array.
+func (t {{$typeRef}}) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Slice())
+}
+
+// MarshalJSON unmarshals the tuple from a JSON array.
+func (t *{{$typeRef}}) UnmarshalJSON(data []byte) error {
+	var slice []any
+	if err := json.Unmarshal(data, &slice); err != nil {
+		return err
+	}
+
+	unmarshalled, err := FromSlice{{.Len}}[{{.GenericTypesForward}}](slice)
+	if err != nil {
+		return err
+	}
+
+	*t = unmarshalled
+	return nil
 }

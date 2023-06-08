@@ -1,6 +1,7 @@
 package tuple
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,10 +10,11 @@ import (
 {{/* These variables can be used when the context of dot changes. */}}
 {{$indexes := .Indexes}}
 {{$len := .Len}}
+{{$stringOverload := buildSingleTypedOverload $indexes "string"}}
 
 func TestT{{.Len}}_New(t *testing.T) {
 	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
-	require.Equal(t, T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
+	require.Equal(t, {{$stringOverload}}{
 		{{range .Indexes -}}
 		V{{.}}: {{. | quote}},
 		{{end}}
@@ -227,7 +229,7 @@ func TestT{{.Len}}_String(t *testing.T) {
 
 func TestT{{.Len}}_GoString(t *testing.T) {
 	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
-	require.Equal(t, `tuple.T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}]{
+	require.Equal(t, `tuple.{{$stringOverload}}{
 		{{- range $i, $index := .Indexes -}}
 		{{- if gt $i 0}}, {{end -}}
 		V{{$index}}: {{$index | quote}}
@@ -281,7 +283,7 @@ func TestT{{.Len}}_FromArrayX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func () T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
+			do := func () {{$stringOverload}} {
 				return FromArray{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.array)
 			}
 
@@ -393,7 +395,7 @@ func TestT{{.Len}}_FromSliceX(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			do := func () T{{.Len}}[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}] {
+			do := func () {{$stringOverload}} {
 				return FromSlice{{.Len}}X[{{range $i, $index := .Indexes}}{{if gt $i 0}}, {{end}}string{{end}}](tt.slice)
 			}
 
@@ -471,4 +473,97 @@ func TestT{{.Len}}_FromSlice(t *testing.T) {
 			require.Equal(t, New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}), tup)
 		})
 	}
+}
+
+func TestT{{.Len}}_MarshalJSON(t *testing.T) {
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
+
+	got, err := json.Marshal(tup)
+	require.NoError(t, err)
+	require.Equal(t, got, []byte(`[{{range .Indexes}}{{if ne . 1}},{{end}}{{. | quote}}{{end}}]`))
+}
+
+func TestT{{.Len}}_UnmarshalJSON(t *testing.T) {
+	tests := []struct{
+		name string
+		data []byte
+		want {{$stringOverload}}
+		wantErr bool
+	}{
+		{
+			name: "nil data",
+			data: nil,
+			wantErr: true,
+		},
+		{
+			name: "empty data",
+			data: []byte{},
+			wantErr: true,
+		},
+		{
+			name: "string data",
+			data: []byte(`"hi"`),
+			wantErr: true,
+		},
+		{
+			name: "empty json array",
+			data: []byte(`[]`),
+			wantErr: true,
+		},
+		{
+			name: "longer json array",
+			data: []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
+			wantErr: true,
+		},
+		{
+			name: "json array of invalid types",
+			data: []byte(`[{{range $.Indexes}}{{if ne . 1}},{{end}}{{.}}{{end}}]`),
+			wantErr: true,
+		},
+		{{if gt .Len 1 -}}
+		{
+			name: "json array with 1 invalid type",
+			data: []byte(`[{{range $.Indexes}}{{if ne . 1}},{{end}}{{if eq . 1}}{{.}}{{else}}{{. | quote}}{{end}}{{end}}]`),
+			wantErr: true,
+		},
+		{{- end}}
+		{
+			name: "json array of valid types",
+			data: []byte(`[{{range $.Indexes}}{{if ne . 1}},{{end}}{{. | quote}}{{end}}]`),
+			want: New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}}),
+			wantErr: false,
+		},
+		{
+			name: "json object of valid types",
+			data: []byte(`{{"{"}}{{range $.Indexes}}{{if ne . 1}},{{end}}"V{{.}}": {{. | quote}}{{end}}{{"}"}}`),
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var got {{$stringOverload}}
+			err := json.Unmarshal(tt.data, &got)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestT{{.Len}}_Marshal_Unmarshal(t *testing.T) {
+	tup := New{{.Len}}({{range .Indexes}}{{. | quote}},{{end}})
+
+	marshalled, err := json.Marshal(tup)
+	require.NoError(t, err)
+
+	var unmarshalled {{$stringOverload}}
+	err = json.Unmarshal(marshalled, &unmarshalled)
+
+	require.NoError(t, err)
+	require.Equal(t, tup, unmarshalled)
 }

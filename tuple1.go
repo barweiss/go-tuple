@@ -1,7 +1,9 @@
 package tuple
 
 import (
+	"encoding/json"
 	"fmt"
+
 	"golang.org/x/exp/constraints"
 )
 
@@ -193,4 +195,25 @@ func GreaterOrEqual1[Ty1 constraints.Ordered](host, guest T1[Ty1]) bool {
 // To compare tuples that hold built-in "Ordered" values, use the GreaterOrEqual1 function.
 func GreaterOrEqual1C[Ty1 Comparable[Ty1]](host, guest T1[Ty1]) bool {
 	return Compare1C(host, guest).GE()
+}
+
+// MarshalJSON marshals the tuple into a JSON array.
+func (t T1[Ty1]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Slice())
+}
+
+// MarshalJSON unmarshals the tuple from a JSON array.
+func (t *T1[Ty1]) UnmarshalJSON(data []byte) error {
+	var slice []any
+	if err := json.Unmarshal(data, &slice); err != nil {
+		return err
+	}
+
+	unmarshalled, err := FromSlice1[Ty1](slice)
+	if err != nil {
+		return err
+	}
+
+	*t = unmarshalled
+	return nil
 }
