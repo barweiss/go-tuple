@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/barweiss/go-tuple/badge.svg)](https://coveralls.io/github/barweiss/go-tuple)
 [![Go Report Card](https://goreportcard.com/badge/github.com/barweiss/go-tuple)](https://goreportcard.com/report/github.com/barweiss/go-tuple)
 [![Go Reference](https://pkg.go.dev/badge/github.com/barweiss/go-tuple.svg)](https://pkg.go.dev/github.com/barweiss/go-tuple)
-[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)  
+[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 
 Go 1.18+ tuple implementation.
 
@@ -79,6 +79,35 @@ tup := tuple.New2(5, "hi!")
 a, b := tup.Values()
 ```
 
+## JSON Marshalling
+
+Tuples are marshalled and unmarshalled as JSON arrays.
+
+```go
+type User struct {
+	Name string `json:"name"`
+	Age  int    `json:"age,omitempty"`
+}
+
+type MyJSON struct {
+	Users []tuple.T2[string, User] `json:"users"`
+}
+
+func main() {
+	data := MyJSON{
+		Users: []tuple.T2[string, User]{
+			tuple.New2("foo", User{Name: "foo", Age: 42}),
+			tuple.New2("bar", User{Name: "bar", Age: 21}),
+			tuple.New2("baz", User{Name: "baz"}),
+		},
+	}
+
+	marshalled, _ := json.Marshal(data)
+	fmt.Printf("%s\n", string(marshalled))
+	// Outputs: {"users":[["foo",{"name":"foo","age":42}],["bar",{"name":"bar","age":21}],["baz",{"name":"baz"}]]}
+}
+```
+
 ## Comparison
 
 Tuples are compared from the first element to the last.
@@ -101,6 +130,7 @@ fmt.Println(tups) // [["bar", -4, 43], ["foo", 2, -23], ["foo", 72, 15]].
 ```
 
 ---
+
 **NOTE**
 
 In order to compare tuples, all tuple elements must match `constraints.Ordered`.
@@ -165,7 +195,7 @@ func main() {
 }
 ```
 
-In order to call the complex types variation of the comparable functions, __all__ tuple types must match the `Comparable` constraint.
+In order to call the complex types variation of the comparable functions, **all** tuple types must match the `Comparable` constraint.
 
 While this is not ideal, this a known inconvenience given the current type parameters capabilities in Go.
 Some solutions have been porposed for this issue ([lesser](https://github.com/lelysses/lesser), for example, beatifully articulates the issue),

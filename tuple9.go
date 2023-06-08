@@ -332,16 +332,49 @@ func (t T9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9]) MarshalJSON() ([]byte, 
 
 // MarshalJSON unmarshals the tuple from a JSON array.
 func (t *T9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9]) UnmarshalJSON(data []byte) error {
-	var slice []any
+	// Working with json.RawMessage instead of any enables custom struct support.
+	var slice []json.RawMessage
 	if err := json.Unmarshal(data, &slice); err != nil {
-		return err
+		return fmt.Errorf("unable to unmarshal json array for tuple: %w", err)
 	}
 
-	unmarshalled, err := FromSlice9[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8, Ty9](slice)
-	if err != nil {
-		return err
+	if len(slice) != 9 {
+		return fmt.Errorf("unmarshalled json array length %d must match number of tuple values 9", len(slice))
+	}
+	if err := json.Unmarshal(slice[0], &t.V1); err != nil {
+		return fmt.Errorf("value %q at slice index 0 failed to unmarshal: %w", string(slice[0]), err)
 	}
 
-	*t = unmarshalled
+	if err := json.Unmarshal(slice[1], &t.V2); err != nil {
+		return fmt.Errorf("value %q at slice index 1 failed to unmarshal: %w", string(slice[1]), err)
+	}
+
+	if err := json.Unmarshal(slice[2], &t.V3); err != nil {
+		return fmt.Errorf("value %q at slice index 2 failed to unmarshal: %w", string(slice[2]), err)
+	}
+
+	if err := json.Unmarshal(slice[3], &t.V4); err != nil {
+		return fmt.Errorf("value %q at slice index 3 failed to unmarshal: %w", string(slice[3]), err)
+	}
+
+	if err := json.Unmarshal(slice[4], &t.V5); err != nil {
+		return fmt.Errorf("value %q at slice index 4 failed to unmarshal: %w", string(slice[4]), err)
+	}
+
+	if err := json.Unmarshal(slice[5], &t.V6); err != nil {
+		return fmt.Errorf("value %q at slice index 5 failed to unmarshal: %w", string(slice[5]), err)
+	}
+
+	if err := json.Unmarshal(slice[6], &t.V7); err != nil {
+		return fmt.Errorf("value %q at slice index 6 failed to unmarshal: %w", string(slice[6]), err)
+	}
+
+	if err := json.Unmarshal(slice[7], &t.V8); err != nil {
+		return fmt.Errorf("value %q at slice index 7 failed to unmarshal: %w", string(slice[7]), err)
+	}
+
+	if err := json.Unmarshal(slice[8], &t.V9); err != nil {
+		return fmt.Errorf("value %q at slice index 8 failed to unmarshal: %w", string(slice[8]), err)
+	}
 	return nil
 }

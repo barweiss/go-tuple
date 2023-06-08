@@ -515,15 +515,10 @@ func TestT{{.Len}}_UnmarshalJSON(t *testing.T) {
 			data: []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
 			wantErr: true,
 		},
+		{{range $invalidIndex, $_ := .Indexes}}
 		{
-			name: "json array of invalid types",
-			data: []byte(`[{{range $.Indexes}}{{if ne . 1}},{{end}}{{.}}{{end}}]`),
-			wantErr: true,
-		},
-		{{if gt .Len 1 -}}
-		{
-			name: "json array with 1 invalid type",
-			data: []byte(`[{{range $.Indexes}}{{if ne . 1}},{{end}}{{if eq . 1}}{{.}}{{else}}{{. | quote}}{{end}}{{end}}]`),
+			name: "json array with invalid type at index {{$invalidIndex}}",
+			data: []byte(`[{{range $currentIndex, $num := $.Indexes}}{{if ne $currentIndex 0}},{{end}}{{if eq $currentIndex $invalidIndex}}{{$num}}{{else}}{{$num | quote}}{{end}}{{end}}]`),
 			wantErr: true,
 		},
 		{{- end}}
@@ -553,6 +548,25 @@ func TestT{{.Len}}_UnmarshalJSON(t *testing.T) {
 			require.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func TestT{{.Len}}_Unmarshal_CustomStruct(t *testing.T) {
+	type Custom struct {
+		Name string `json:"name"`
+		Age int `json:"age"`
+	}
+
+	want := New{{.Len}}({{range .Indexes}}Custom{ Name: {{. | quote}}, Age: {{.}} },{{end}})
+	var got T{{.Len}}[{{range .Indexes}}Custom,{{end}}]
+	err := json.Unmarshal([]byte(`[
+		{{- range .Indexes -}}
+		{{- if ne . 1}},{{end}}
+		{ "name": {{. | quote}}, "age": {{.}} }
+		{{- end}}
+	]`), &got)
+
+	require.NoError(t, err)
+	require.Equal(t, want, got)
 }
 
 func TestT{{.Len}}_Marshal_Unmarshal(t *testing.T) {

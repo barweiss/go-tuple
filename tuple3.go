@@ -236,16 +236,25 @@ func (t T3[Ty1, Ty2, Ty3]) MarshalJSON() ([]byte, error) {
 
 // MarshalJSON unmarshals the tuple from a JSON array.
 func (t *T3[Ty1, Ty2, Ty3]) UnmarshalJSON(data []byte) error {
-	var slice []any
+	// Working with json.RawMessage instead of any enables custom struct support.
+	var slice []json.RawMessage
 	if err := json.Unmarshal(data, &slice); err != nil {
-		return err
+		return fmt.Errorf("unable to unmarshal json array for tuple: %w", err)
 	}
 
-	unmarshalled, err := FromSlice3[Ty1, Ty2, Ty3](slice)
-	if err != nil {
-		return err
+	if len(slice) != 3 {
+		return fmt.Errorf("unmarshalled json array length %d must match number of tuple values 3", len(slice))
+	}
+	if err := json.Unmarshal(slice[0], &t.V1); err != nil {
+		return fmt.Errorf("value %q at slice index 0 failed to unmarshal: %w", string(slice[0]), err)
 	}
 
-	*t = unmarshalled
+	if err := json.Unmarshal(slice[1], &t.V2); err != nil {
+		return fmt.Errorf("value %q at slice index 1 failed to unmarshal: %w", string(slice[1]), err)
+	}
+
+	if err := json.Unmarshal(slice[2], &t.V3); err != nil {
+		return fmt.Errorf("value %q at slice index 2 failed to unmarshal: %w", string(slice[2]), err)
+	}
 	return nil
 }

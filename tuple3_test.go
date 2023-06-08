@@ -517,14 +517,20 @@ func TestT3_UnmarshalJSON(t *testing.T) {
 			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
 			wantErr: true,
 		},
+
 		{
-			name:    "json array of invalid types",
-			data:    []byte(`[1,2,3]`),
+			name:    "json array with invalid type at index 0",
+			data:    []byte(`[1,"2","3"]`),
 			wantErr: true,
 		},
 		{
-			name:    "json array with 1 invalid type",
-			data:    []byte(`[1,"2","3"]`),
+			name:    "json array with invalid type at index 1",
+			data:    []byte(`["1",2,"3"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 2",
+			data:    []byte(`["1","2",3]`),
 			wantErr: true,
 		},
 		{
@@ -553,6 +559,24 @@ func TestT3_UnmarshalJSON(t *testing.T) {
 			require.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func TestT3_Unmarshal_CustomStruct(t *testing.T) {
+	type Custom struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+
+	want := New3(Custom{Name: "1", Age: 1}, Custom{Name: "2", Age: 2}, Custom{Name: "3", Age: 3})
+	var got T3[Custom, Custom, Custom]
+	err := json.Unmarshal([]byte(`[
+		{ "name": "1", "age": 1 },
+		{ "name": "2", "age": 2 },
+		{ "name": "3", "age": 3 }
+	]`), &got)
+
+	require.NoError(t, err)
+	require.Equal(t, want, got)
 }
 
 func TestT3_Marshal_Unmarshal(t *testing.T) {
