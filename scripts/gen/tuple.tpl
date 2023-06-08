@@ -232,10 +232,12 @@ func GreaterOrEqual{{.Len}}C[{{genericTypesDeclGenericConstraint .Indexes "Compa
 	return Compare{{.Len}}C(host, guest).GE()
 }
 
+// MarshalJSON marshals the tuple into a JSON array.
 func (t {{$typeRef}}) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Slice())
 }
 
+// MarshalJSON unmarshals the tuple from a JSON array.
 func (t *{{$typeRef}}) UnmarshalJSON(data []byte) error {
 	var slice []any
 	if err := json.Unmarshal(data, &slice); err != nil {

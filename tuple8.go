@@ -309,10 +309,12 @@ func GreaterOrEqual8C[Ty1 Comparable[Ty1], Ty2 Comparable[Ty2], Ty3 Comparable[T
 	return Compare8C(host, guest).GE()
 }
 
+// MarshalJSON marshals the tuple into a JSON array.
 func (t T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Slice())
 }
 
+// MarshalJSON unmarshals the tuple from a JSON array.
 func (t *T8[Ty1, Ty2, Ty3, Ty4, Ty5, Ty6, Ty7, Ty8]) UnmarshalJSON(data []byte) error {
 	var slice []any
 	if err := json.Unmarshal(data, &slice); err != nil {
