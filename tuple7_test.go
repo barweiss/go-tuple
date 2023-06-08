@@ -621,14 +621,40 @@ func TestT7_UnmarshalJSON(t *testing.T) {
 			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
 			wantErr: true,
 		},
+
 		{
-			name:    "json array of invalid types",
-			data:    []byte(`[1,2,3,4,5,6,7]`),
+			name:    "json array with invalid type at index 0",
+			data:    []byte(`[1,"2","3","4","5","6","7"]`),
 			wantErr: true,
 		},
 		{
-			name:    "json array with 1 invalid type",
-			data:    []byte(`[1,"2","3","4","5","6","7"]`),
+			name:    "json array with invalid type at index 1",
+			data:    []byte(`["1",2,"3","4","5","6","7"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 2",
+			data:    []byte(`["1","2",3,"4","5","6","7"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 3",
+			data:    []byte(`["1","2","3",4,"5","6","7"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 4",
+			data:    []byte(`["1","2","3","4",5,"6","7"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 5",
+			data:    []byte(`["1","2","3","4","5",6,"7"]`),
+			wantErr: true,
+		},
+		{
+			name:    "json array with invalid type at index 6",
+			data:    []byte(`["1","2","3","4","5","6",7]`),
 			wantErr: true,
 		},
 		{

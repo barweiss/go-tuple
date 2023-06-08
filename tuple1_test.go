@@ -461,12 +461,12 @@ func TestT1_UnmarshalJSON(t *testing.T) {
 			data:    []byte(`["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`),
 			wantErr: true,
 		},
+
 		{
-			name:    "json array of invalid types",
+			name:    "json array with invalid type at index 0",
 			data:    []byte(`[1]`),
 			wantErr: true,
 		},
-
 		{
 			name:    "json array of valid types",
 			data:    []byte(`["1"]`),
